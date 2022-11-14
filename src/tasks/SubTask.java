@@ -1,14 +1,17 @@
+package tasks;
+
 public class SubTask extends Task{
     protected int epicId;
 
-    public SubTask(String name, String info, String status, int epicId) {
+    public SubTask(String name, String info, String status, Epic epic) {
         super(name, info, status);
-        this.epicId = epicId;
+
+        this.epicId = epic.getId();
     }
 
     @Override
     public String toString() {
-        return "SubTask{" +
+        return "tasks.SubTask{" +
                 "epicId=" + epicId +
                 ", name='" + name + '\'' +
                 ", info='" + info + '\'' +
