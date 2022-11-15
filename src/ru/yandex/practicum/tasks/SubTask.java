@@ -1,4 +1,4 @@
-package tasks;
+package ru.yandex.practicum.tasks;
 
 public class SubTask extends Task{
     protected int epicId;
@@ -11,7 +11,7 @@ public class SubTask extends Task{
 
     @Override
     public String toString() {
-        return "tasks.SubTask{" +
+        return "SubTask{" +
                 "epicId=" + epicId +
                 ", name='" + name + '\'' +
                 ", info='" + info + '\'' +

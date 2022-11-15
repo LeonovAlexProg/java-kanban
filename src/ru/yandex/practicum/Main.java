@@ -1,8 +1,10 @@
-import tasks.Epic;
-import tasks.Status;
-import tasks.SubTask;
-import tasks.Task;
-import tasks.manager.TaskManager;
+package ru.yandex.practicum;
+
+import ru.yandex.practicum.tasks.Epic;
+import ru.yandex.practicum.tasks.Status;
+import ru.yandex.practicum.tasks.SubTask;
+import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.manager.TaskManager;
 
 public class Main {
     public static void main(String[] args) {
@@ -36,13 +38,14 @@ public class Main {
 
         firstTask.setStatus(Status.IN_PROGRESS.toString());
 
-        /* В ревью было написано *эпики статусом самостоятельно не управляют.*, но ведь у меня как-раз так и сделано.
-        Я полагаю я не совсем понятно назвал объекты представляющие соотвествующие задачи, но в последующем коде
-        у меня меняется статус исключительно у трёх SubTask объектов. После чего вызываются методы для обнавления
-        статуса самих сабтасков и их эпиков
+        /*
+        Цитирую: "эпику не предполагается задавать статус, он зависит только от списка подзадач.
+         тут скорее надо проверять изменяя статус у подзадач и проверять что у эпика поменялся на нужный."
+
+         Я всё никак не понимаю, прошу прощения. Я не задаю никаким образом эпику статус вручную. Код который находится
+         под коментариями обновляет статусы У САБТАСКОВ. (firstEpicSubTask - первый сабтаск первого эпика
+         secondEpicSubTask - первый сабтаск второго эпика)
          */
-
-
         firstEpicSubTask.setStatus(Status.DONE.toString());
         firstEpicSubTask2.setStatus(Status.DONE.toString());
         secondEpicSubTask.setStatus(Status.DONE.toString());

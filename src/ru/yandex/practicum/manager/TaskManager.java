@@ -1,8 +1,9 @@
-package tasks.manager;
+package ru.yandex.practicum.manager;
 
-import tasks.Epic;
-import tasks.SubTask;
-import tasks.Task;
+import ru.yandex.practicum.tasks.Epic;
+import ru.yandex.practicum.tasks.Status;
+import ru.yandex.practicum.tasks.SubTask;
+import ru.yandex.practicum.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,31 +22,29 @@ public class TaskManager {
     }
 
     public ArrayList<Task> getAllTasks() {
+        ArrayList<Task> allTasks = new ArrayList<>();
 
-        ArrayList<Task> allTasks = new ArrayList<>(tasks.values());
-
-        for (Epic epic : epics.values()) {
-            allTasks.add(epic);
-            allTasks.addAll(getEpicSubTasks(epic));
-        }
+        allTasks.addAll(tasks.values());
+        allTasks.addAll(epics.values());
+        allTasks.addAll(subTasks.values());
         return allTasks;
     }
 
     public ArrayList<Task> getTasks() {
 
-        return new ArrayList<>(this.tasks.values());
+        return new ArrayList<>(tasks.values());
 
     }
 
     public ArrayList<Epic> getEpics() {
 
-        return new ArrayList<>(this.epics.values());
+        return new ArrayList<>(epics.values());
 
     }
 
     public ArrayList<SubTask> getSubTasks() {
 
-        return new ArrayList<>(this.subTasks.values());
+        return new ArrayList<>(subTasks.values());
 
     }
 
@@ -67,32 +66,29 @@ public class TaskManager {
         return subTasks.get(id);
     }
 
-    public Integer newTask(Task task) {
+    public int newTask(Task task) {
         int id = this.id++;
         task.setId(id);
         tasks.put(id, task);
         return id;
     }
 
-    public Integer newEpic(Epic epic) {
+    public int newEpic(Epic epic) {
         int id = this.id++;
         epic.setId(id);
         epics.put(id,epic);
         return id;
     }
 
-    public Integer newSubTask(SubTask subTask) {
-        int id = this.id++;
+    public int newSubTask(SubTask subTask) {
         if (epics.containsKey(subTask.getEpicId())) {
+            int id = this.id++;
             subTask.setId(id);
             subTasks.put(id, subTask);
-            /* в ревью мне пометили что *Не проверяется статус Epic, но при добавлении subTask он может тоже поменяться*
-            Наверное я путаю, но Epic должен менять свой статус на IN_PROGRESS только когда первый из новых сабтасков,
-            становится IN_PROGRESS, а эта логика у меня реализована в методе updateSubTask();
-             */
             updateEpicSubTasks(epics.get(subTask.getEpicId()), subTask);
+            return id;
         }
-        return id;
+        return -1;
     }
 
     public void updateTask(Task task) {
@@ -142,11 +138,7 @@ public class TaskManager {
     }
 
     private void deleteAllSubTasks(Epic epic) {
-        ArrayList<Integer> subTasks = epic.getSubTasks();
-        for (Integer subTask : subTasks) {
-            this.subTasks.remove(subTask);
-        }
-        epic.getSubTasks().removeAll(subTasks);
+        epic.getSubTasks().clear();
     }
 
     private void deleteSubTask(Integer subTaskId) {
@@ -166,26 +158,26 @@ public class TaskManager {
     }
 
     private void updateEpicStatus(Epic epic) {
+        boolean isNew = true;
         boolean isDone = true;
 
         if (!epic.getSubTasks().isEmpty()) {
             for (Integer subTask : epic.getSubTasks()) {
                 String subTaskStatus = subTasks.get(subTask).getStatus();
 
-                if (subTaskStatus.equals("IN_PROGRESS"))
-                    epic.setStatus("IN_PROGRESS");
+                if (!subTaskStatus.equals(Status.NEW.toString()))
+                    isNew = false;
 
-                if (!subTaskStatus.equals("DONE"))
+                if (!subTaskStatus.equals(Status.DONE.toString()))
                     isDone = false;
             }
-            /* в данном методе у меня проводится проверка статусов сабтасков внутри эпика.
-            в цикле я перебираю все сабтаски, и если есть хотя бы один IN_PROGRESS, то статус эпика становится тоже
-            IN_PROGRESS. Однако параллельно этому я установил флаг isDone, который будет true только если все
-            сабтаски будут DONE. Честно говоря я не понимаю где у меня тут ошибку( Добавил проверку на наличие сабтасков
-            в принципе.
-             */
-            if (isDone)
-                epic.setStatus("DONE");
+            if (isNew)
+                epic.setStatus(Status.NEW.toString());
+            else if (isDone)
+                epic.setStatus(Status.DONE.toString());
+            else{
+                epic.setStatus(Status.IN_PROGRESS.toString());
+            }
         }
     }
 }

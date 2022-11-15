@@ -1,4 +1,4 @@
-package tasks;
+package ru.yandex.practicum.tasks;
 
 import java.util.ArrayList;
 
@@ -12,7 +12,7 @@ public class Epic extends Task{
 
     @Override
     public String toString() {
-        return "tasks.Epic{" +
+        return "Epic{" +
                 "subTasks=" + subTasks +
                 ", name='" + name + '\'' +
                 ", info='" + info + '\'' +
