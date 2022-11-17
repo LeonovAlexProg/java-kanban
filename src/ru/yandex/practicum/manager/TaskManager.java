@@ -76,7 +76,7 @@ public class TaskManager {
     public int newEpic(Epic epic) {
         int id = this.id++;
         epic.setId(id);
-        epics.put(id,epic);
+        epics.put(id, epic);
         return id;
     }
 
@@ -161,23 +161,22 @@ public class TaskManager {
         boolean isNew = true;
         boolean isDone = true;
 
-        if (!epic.getSubTasks().isEmpty()) {
-            for (Integer subTask : epic.getSubTasks()) {
-                String subTaskStatus = subTasks.get(subTask).getStatus();
+        for (Integer subTask : epic.getSubTasks()) {
+            String subTaskStatus = subTasks.get(subTask).getStatus();
 
-                if (!subTaskStatus.equals(Status.NEW.toString()))
-                    isNew = false;
+            if (!subTaskStatus.equals(Status.NEW.toString()))
+                isNew = false;
 
-                if (!subTaskStatus.equals(Status.DONE.toString()))
-                    isDone = false;
-            }
-            if (isNew)
-                epic.setStatus(Status.NEW.toString());
-            else if (isDone)
-                epic.setStatus(Status.DONE.toString());
-            else{
-                epic.setStatus(Status.IN_PROGRESS.toString());
-            }
+            if (!subTaskStatus.equals(Status.DONE.toString()))
+                isDone = false;
+        }
+        if (isNew) {
+            epic.setStatus(Status.NEW.toString());
+        } else if (isDone) {
+            epic.setStatus(Status.DONE.toString());
+        } else {
+            epic.setStatus(Status.IN_PROGRESS.toString());
         }
     }
+
 }

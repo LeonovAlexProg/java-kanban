@@ -38,14 +38,6 @@ public class Main {
 
         firstTask.setStatus(Status.IN_PROGRESS.toString());
 
-        /*
-        Цитирую: "эпику не предполагается задавать статус, он зависит только от списка подзадач.
-         тут скорее надо проверять изменяя статус у подзадач и проверять что у эпика поменялся на нужный."
-
-         Я всё никак не понимаю, прошу прощения. Я не задаю никаким образом эпику статус вручную. Код который находится
-         под коментариями обновляет статусы У САБТАСКОВ. (firstEpicSubTask - первый сабтаск первого эпика
-         secondEpicSubTask - первый сабтаск второго эпика)
-         */
         firstEpicSubTask.setStatus(Status.DONE.toString());
         firstEpicSubTask2.setStatus(Status.DONE.toString());
         secondEpicSubTask.setStatus(Status.DONE.toString());
