@@ -1,5 +1,7 @@
 package ru.yandex.practicum;
 
+import ru.yandex.practicum.manager.Manager;
+import ru.yandex.practicum.manager.TaskManager;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.SubTask;
@@ -8,7 +10,7 @@ import ru.yandex.practicum.manager.InMemoryTaskManager;
 
 public class Main {
     public static void main(String[] args) {
-        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
+        TaskManager inMemoryTaskManager = Manager.getDefault();
 
         Task firstTask = new Task("Заняться спортом", "Совершить утреннюю пробежку", "NEW");
         Task secondTask = new Task("Пообедать", "Приготовить обед", "NEW");
