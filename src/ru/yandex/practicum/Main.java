@@ -54,7 +54,7 @@ public class Main {
 
         System.out.println(inMemoryTaskManager.getAllTasks());
 
-        System.out.println(inMemoryTaskManager.getEpicById(epic2));
+        System.out.println(inMemoryTaskManager.getEpic(epic2));
 
         inMemoryTaskManager.deleteAll();
 
