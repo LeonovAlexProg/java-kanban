@@ -5,6 +5,7 @@ import ru.yandex.practicum.tasks.SubTask;
 import ru.yandex.practicum.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
 
@@ -26,4 +27,6 @@ public interface TaskManager {
     void deleteTaskById(Integer id);
     void deleteEpicById(Integer id);
     void deleteSubTaskById(Integer id);
+
+    List<Task> getHistory();
 }

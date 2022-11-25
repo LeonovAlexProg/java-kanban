@@ -14,14 +14,20 @@ public class InMemoryTaskManager implements TaskManager{
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, SubTask> subTasks;
     private int id;
-    private List<Task> viewStory = new ArrayList<>();
+    HistoryManager inMemoryHistoryManager;
 
     public InMemoryTaskManager() {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.subTasks = new HashMap<>();
         this.id = 0;
+        inMemoryHistoryManager = Manager.getDefaultHistory();
     }
+
+    public List<Task> getHistory() {
+        return inMemoryHistoryManager.getHistory();
+    }
+
 
     @Override
     public ArrayList<Task> getAllTasks() {
@@ -58,36 +64,24 @@ public class InMemoryTaskManager implements TaskManager{
         subTasks.clear();
     }
 
-    private void updateViewStory(Task task) {
-        if (task != null) {
-            if (viewStory.size() > 10)
-                viewStory.remove(0);
-            viewStory.add(task);
-        }
-    }
-
-    public List<Task> getHistory() {
-        return viewStory;
-    }
-
     @Override
     public Task getTask(Integer id) {
         Task task = tasks.get(id);
-        updateViewStory(task);
+        inMemoryHistoryManager.add(task);
         return task;
     }
 
     @Override
     public Epic getEpic(Integer id) {
         Epic epic = epics.get(id);
-        updateViewStory(epic);
+        inMemoryHistoryManager.add(epic);
         return epic;
     }
 
     @Override
     public SubTask getSubTask(Integer id) {
         SubTask subTask = subTasks.get(id);
-        updateViewStory(subTask);
+        inMemoryHistoryManager.add(subTask);
         return subTask;
     }
 
