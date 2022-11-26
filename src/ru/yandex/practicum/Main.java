@@ -12,28 +12,28 @@ public class Main {
     public static void main(String[] args) {
         TaskManager inMemoryTaskManager = Manager.getDefault();
 
-        Task firstTask = new Task("Заняться спортом", "Совершить утреннюю пробежку", "NEW");
-        Task secondTask = new Task("Пообедать", "Приготовить обед", "NEW");
+        Task firstTask = new Task("Заняться спортом", "Совершить утреннюю пробежку", Status.NEW);
+        Task secondTask = new Task("Пообедать", "Приготовить обед", Status.NEW);
 
         int task1 = inMemoryTaskManager.newTask(firstTask);
         int task2 = inMemoryTaskManager.newTask(secondTask);
 
-        Epic firstEpic = new Epic("Сходить в магазин", "Закупиться продуктами по списку", "NEW");
+        Epic firstEpic = new Epic("Сходить в магазин", "Закупиться продуктами по списку", Status.NEW);
         int epic1 = inMemoryTaskManager.newEpic(firstEpic);
 
         SubTask firstEpicSubTask = new SubTask("Подготовить список",
                 "подготовить список того что нужно купить",
-                "NEW", firstEpic);
+                Status.NEW, firstEpic);
         SubTask firstEpicSubTask2 = new SubTask("Совершить покупки", "собрать корзину и оплатить товары",
-                "NEW", firstEpic);
+                Status.NEW, firstEpic);
         int subTask1 = inMemoryTaskManager.newSubTask(firstEpicSubTask);
         int subTask2 = inMemoryTaskManager.newSubTask(firstEpicSubTask2);
 
-        Epic secondEpic = new Epic("Учиться", "Выполнить задания по учёбе", "NEW");
+        Epic secondEpic = new Epic("Учиться", "Выполнить задания по учёбе", Status.NEW);
         int epic2 = inMemoryTaskManager.newEpic(secondEpic);
 
         SubTask secondEpicSubTask = new SubTask("Проектная деятельность",
-                "выполнить тз для Яндекс Практикума", "NEW", secondEpic);
+                "выполнить тз для Яндекс Практикума", Status.NEW, secondEpic);
         int subTask3 = inMemoryTaskManager.newSubTask(secondEpicSubTask);
 
         System.out.println(inMemoryTaskManager.getTask(task1));
@@ -41,10 +41,10 @@ public class Main {
         System.out.println(inMemoryTaskManager.getEpic(epic1));
         System.out.println(inMemoryTaskManager.getSubTask(subTask3));
 
-        firstTask.setStatus(Status.IN_PROGRESS.toString());
-        firstEpicSubTask.setStatus(Status.DONE.toString());
-        firstEpicSubTask2.setStatus(Status.DONE.toString());
-        secondEpicSubTask.setStatus(Status.DONE.toString());
+        firstTask.setStatus(Status.IN_PROGRESS);
+        firstEpicSubTask.setStatus(Status.DONE);
+        firstEpicSubTask2.setStatus(Status.DONE);
+        secondEpicSubTask.setStatus(Status.DONE);
 
         inMemoryTaskManager.updateTask(firstTask);
         inMemoryTaskManager.updateSubTask(firstEpicSubTask);

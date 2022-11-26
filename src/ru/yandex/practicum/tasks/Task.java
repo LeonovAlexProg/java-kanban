@@ -4,9 +4,9 @@ public class Task {
     protected String name;
     protected String info;
     protected Integer id;
-    protected String status;
+    protected Status status;
 
-    public Task(String name, String info, String status) {
+    public Task(String name, String info, Status status) {
         this.name = name;
         this.info = info;
         this.id = null;
@@ -47,11 +47,11 @@ public class Task {
         this.id = id;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

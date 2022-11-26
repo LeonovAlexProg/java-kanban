@@ -10,7 +10,14 @@ import java.util.List;
 public interface TaskManager {
 
     ArrayList<Task> getAllTasks();
+    List<Task> getTasks();
+    List<Epic> getEpics();
+    List<SubTask> getSubTasks();
+
     void deleteAll();
+    void deleteAllTasks();
+    void deleteAllEpics();
+    void deleteAllSubTasks();
 
     Task getTask(Integer id);
     Epic getEpic(Integer id);

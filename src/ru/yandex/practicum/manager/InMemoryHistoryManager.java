@@ -6,17 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager{
-    private final List<Task> viewStory = new ArrayList<>();
+    private final List<Integer> viewStory = new ArrayList<>();
 
-    public void add(Task task) {
-        if (task != null) {
-            if (viewStory.size() >= 10)
-                viewStory.remove(0);
-            viewStory.add(task);
-        }
+    @Override
+    public void add(int id) {
+        if (viewStory.size() >= 10)
+            viewStory.remove(0);
+        viewStory.add(id);
+
     }
 
-    public List<Task> getHistory() {
+    @Override
+    public List<Integer> getHistory() {
         return viewStory;
     }
 }
