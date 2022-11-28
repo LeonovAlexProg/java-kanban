@@ -23,6 +23,8 @@ public interface TaskManager {
     Epic getEpic(Integer id);
     SubTask getSubTask(Integer id);
 
+    ArrayList<SubTask> getEpicSubTasks(Integer id);
+
     int newTask(Task task);
     int newEpic(Epic epic);
     int newSubTask(SubTask subTask);

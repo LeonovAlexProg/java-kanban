@@ -36,10 +36,12 @@ public class Main {
                 "выполнить тз для Яндекс Практикума", Status.NEW, secondEpic);
         int subTask3 = inMemoryTaskManager.newSubTask(secondEpicSubTask);
 
-        System.out.println(inMemoryTaskManager.getTask(task1));
-        System.out.println(inMemoryTaskManager.getTask(task2));
-        System.out.println(inMemoryTaskManager.getEpic(epic1));
-        System.out.println(inMemoryTaskManager.getSubTask(subTask3));
+        System.out.print(inMemoryTaskManager.getTask(task1));
+        System.out.print(inMemoryTaskManager.getTask(task2));
+        System.out.print(inMemoryTaskManager.getEpic(epic1));
+        System.out.print(inMemoryTaskManager.getSubTask(subTask3));
+
+        System.out.println();
 
         firstTask.setStatus(Status.IN_PROGRESS);
         firstEpicSubTask.setStatus(Status.DONE);
@@ -50,11 +52,12 @@ public class Main {
         inMemoryTaskManager.updateSubTask(firstEpicSubTask);
         inMemoryTaskManager.updateSubTask(secondEpicSubTask);
 
-        System.out.println(inMemoryTaskManager.getTask(task1));
-        System.out.println(inMemoryTaskManager.getSubTask(subTask1));
-        System.out.println(inMemoryTaskManager.getSubTask(subTask3));
-        System.out.println(inMemoryTaskManager.getEpic(epic2));
+        System.out.print(inMemoryTaskManager.getTask(task1));
+        System.out.print(inMemoryTaskManager.getSubTask(subTask1));
+        System.out.print(inMemoryTaskManager.getSubTask(subTask3));
+        System.out.print(inMemoryTaskManager.getEpic(epic2));
 
+        System.out.println();
 
         System.out.println(inMemoryTaskManager.getHistory());
     }
