@@ -25,14 +25,7 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     public List<Task> getHistory() {
-        List<Task> taskHistory = new ArrayList<>();
-        List<Task> allTasks = getAllTasks();
-
-        for (Integer id : historyManager.getHistory()) {
-            taskHistory.add(allTasks.get(id));
-        }
-
-        return taskHistory;
+        return historyManager.getHistory();
     }
 
 
@@ -97,19 +90,19 @@ public class InMemoryTaskManager implements TaskManager{
 
     @Override
     public Task getTask(Integer id) {
-        historyManager.add(id);
+        historyManager.add(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
     public Epic getEpic(Integer id) {
-        historyManager.add(id);
+        historyManager.add(epics.get(id));
         return epics.get(id);
     }
 
     @Override
     public SubTask getSubTask(Integer id) {
-        historyManager.add(id);
+        historyManager.add(subTasks.get(id));
         return subTasks.get(id);
     }
 
@@ -175,6 +168,7 @@ public class InMemoryTaskManager implements TaskManager{
 
     @Override
     public void deleteTaskById(Integer id) {
+        historyManager.remove(id);
         tasks.remove(id);
     }
 
@@ -182,6 +176,7 @@ public class InMemoryTaskManager implements TaskManager{
     public void deleteEpicById(Integer id) {
         if (epics.containsKey(id)) {
             deleteEpicSubTasks(epics.get(id));
+            historyManager.remove(id);
             epics.remove(id);
         }
     }
@@ -189,6 +184,7 @@ public class InMemoryTaskManager implements TaskManager{
     @Override
     public void deleteSubTaskById(Integer id) {
         if (subTasks.containsKey(id)) {
+            historyManager.remove(id);
             SubTask subTask = subTasks.get(id);
 
             epics.get(subTask.getEpicId()).getSubTasks().remove(id);
@@ -199,6 +195,7 @@ public class InMemoryTaskManager implements TaskManager{
 
     private void deleteEpicSubTasks(Epic epic) {
         for (Integer subTask : epic.getSubTasks()) {
+            historyManager.remove(subTask);
             subTasks.remove(subTask);
         }
 
