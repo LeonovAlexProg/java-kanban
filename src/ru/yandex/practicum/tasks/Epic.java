@@ -21,6 +21,10 @@ public class Epic extends Task{
                 "}\n";
     }
 
+    public String toCsvString() {
+        return String.format("%d,%s,%s,%s,%n", id, TaskTypes.EPIC, status, info);
+    }
+
     public ArrayList<Integer> getSubTasks() {
         return subTasks;
     }

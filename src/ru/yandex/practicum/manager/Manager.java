@@ -8,4 +8,8 @@ public class Manager {
     public static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
     }
+
+    public static FileBackedTasksManager getFileBacked() {
+        return new FileBackedTasksManager("src/ru/yandex/practicum/resources/TaskFile.csv");
+    }
 }

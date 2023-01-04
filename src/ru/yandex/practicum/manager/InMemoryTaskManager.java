@@ -10,17 +10,17 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager{
-    private final HashMap<Integer, Task> tasks;
-    private final HashMap<Integer, Epic> epics;
-    private final HashMap<Integer, SubTask> subTasks;
-    private int id;
+    protected final HashMap<Integer, Task> tasks;
+    protected final HashMap<Integer, Epic> epics;
+    protected final HashMap<Integer, SubTask> subTasks;
+    protected int id;
     HistoryManager historyManager;
 
     public InMemoryTaskManager() {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.subTasks = new HashMap<>();
-        this.id = 0;
+        this.id = 1;
         historyManager = Manager.getDefaultHistory();
     }
 
@@ -157,7 +157,7 @@ public class InMemoryTaskManager implements TaskManager{
 
     //данный метод не обновляет статус, он вспомогательный и вызывается внутри newSubTask() что бы добавить
     //айди нового сабтаска в список всех сабтасков конкретного эпика
-    private void updateEpicSubTasks(Epic epic, SubTask subTask) {
+    protected void updateEpicSubTasks(Epic epic, SubTask subTask) {
         if (epics.containsKey(epic.getId()) && subTasks.containsKey(subTask.getId())) {
             ArrayList<Integer> subTasks = epic.getSubTasks();
 
@@ -212,7 +212,7 @@ public class InMemoryTaskManager implements TaskManager{
         return subTasks;
     }
 
-    private void updateEpicStatus(Epic epic) {
+    protected void updateEpicStatus(Epic epic) {
         boolean isNew = true;
         boolean isDone = true;
 

@@ -20,6 +20,10 @@ public class SubTask extends Task{
                 "}\n";
     }
 
+    public String toCsvString() {
+        return String.format("%d,%s,%s,%s,%s%n", id, TaskTypes.SUBTASK, status, info, epicId);
+    }
+
     public int getEpicId() {
         return epicId;
     }

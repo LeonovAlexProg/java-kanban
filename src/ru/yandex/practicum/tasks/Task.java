@@ -23,6 +23,10 @@ public class Task {
                 "}\n";
     }
 
+    public String toCsvString() {
+        return String.format("%d,%s,%s,%s,%n", id, TaskTypes.TASK, status, info);
+    }
+
     public String getName() {
         return name;
     }
