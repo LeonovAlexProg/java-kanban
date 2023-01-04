@@ -21,7 +21,7 @@ public class SubTask extends Task{
     }
 
     public String toCsvString() {
-        return String.format("%d,%s,%s,%s,%s%n", id, TaskTypes.SUBTASK, status, info, epicId);
+        return String.format("%d,%s,%s,%s,%s,%s%n", id, TaskTypes.SUBTASK, name, status, info, epicId);
     }
 
     public int getEpicId() {
