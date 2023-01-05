@@ -39,7 +39,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
                 fw.write(historyToString(historyManager));
             }
         } catch (IOException exception) {
-            //throw new ManagerSaveException("Ошибка во время сохранения в файл");
+            throw new ManagerSaveException("Ошибка во время сохранения в файл");
         }
     }
 
@@ -51,23 +51,46 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
                 lines.add(br.readLine());
             }
 
-            for (int i = 1; i < lines.size() - 1; i++) {
+            for (int i = 1; i < lines.size() - 2; i++) {
                 String[] taskLine = lines.get(i).split(",");
 
                 if (taskLine[1].equals(TaskTypes.TASK.toString())) {
-                    tasks.put(Integer.parseInt(taskLine[0]),
-                            new Task(taskLine[2], taskLine[4], Status.valueOf(taskLine[3])));
+                    Task task = new Task(taskLine[2], taskLine[4], Status.valueOf(taskLine[3]));
+                    task.setId(Integer.parseInt(taskLine[0]));
+
+                    tasks.put(Integer.parseInt(taskLine[0]), task);
                 } else if (taskLine[1].equals(TaskTypes.EPIC.toString())) {
-                    epics.put(Integer.parseInt(taskLine[0]),
-                            new Epic(taskLine[2], taskLine[4], Status.valueOf(taskLine[3])));
+                    Epic epic = new Epic(taskLine[2], taskLine[4], Status.valueOf(taskLine[3]));
+                    epic.setId(Integer.parseInt(taskLine[0]));
+
+                    epics.put(Integer.parseInt(taskLine[0]), epic);
                 } else {
-                    subTasks.put(Integer.parseInt(taskLine[0]),
-                            new SubTask(taskLine[2], taskLine[4], Status.valueOf(taskLine[3]),
-                                    epics.get(Integer.parseInt(taskLine[5]))));
+                    Epic epic = epics.get(Integer.parseInt(taskLine[5]));
+
+                    SubTask subTask = new SubTask(taskLine[2], taskLine[4], Status.valueOf(taskLine[3]), epic);
+                    subTask.setId(Integer.parseInt(taskLine[0]));
+
+                    epic.getSubTasks().add(subTask.getId());
+
+                    subTasks.put(Integer.parseInt(taskLine[0]), subTask);
+                }
+            }
+
+            List<Integer> history = historyFromString(lines.get(lines.size() - 1));
+
+            for (Integer id : history) {
+                if (tasks.containsKey(id)) {
+                    historyManager.add(tasks.get(id));
+                } else if (epics.containsKey(id)) {
+                    historyManager.add(epics.get(id));
+                } else {
+                    historyManager.add(subTasks.get(id));
                 }
             }
         } catch (IOException exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
+        } catch (IndexOutOfBoundsException exception) {
+            System.out.println("Данные отсутствуют");
         }
     }
 
@@ -207,36 +230,40 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
     public static void main(String[] args) {
         FileBackedTasksManager tm = Manager.getFileBacked();
 
-//        Task firstTask = new Task("Заняться спортом", "Совершить утреннюю пробежку", Status.NEW);
-//        Task secondTask = new Task("Пообедать", "Приготовить обед", Status.NEW);
-//
-//        int task1 = tm.newTask(firstTask);
-//        int task2 = tm.newTask(secondTask);
-//
-//        Epic firstEpic = new Epic("Сходить в магазин", "Закупиться продуктами по списку", Status.NEW);
-//        int epic1 = tm.newEpic(firstEpic);
-//
-//        SubTask firstEpicSubTask = new SubTask("Подготовить список",
-//                "подготовить список того что нужно купить",
-//                Status.NEW, firstEpic);
-//        SubTask firstEpicSubTask2 = new SubTask("Совершить покупки", "собрать корзину и оплатить товары",
-//                Status.NEW, firstEpic);
-//        SubTask firstEpicSubTask3 = new SubTask("Проектная деятельность",
-//                "выполнить тз для Яндекс Практикума", Status.NEW, firstEpic);
-//        int subTask1 = tm.newSubTask(firstEpicSubTask);
-//        int subTask2 = tm.newSubTask(firstEpicSubTask2);
-//        int subTask3 = tm.newSubTask(firstEpicSubTask3);
-//
-//        Epic secondEpic = new Epic("Учиться", "Выполнить задания по учёбе", Status.NEW);
-//        int epic2 = tm.newEpic(secondEpic);
-//
-//        tm.getTask(task1);
-//        tm.getEpic(epic1);
-//        tm.getSubTask(subTask1);
-//        tm.getSubTask(subTask2);
-//        tm.getSubTask(subTask3);
-//        tm.getSubTask(subTask1);
-//        tm.getTask(task2);
-//        tm.getTask(task1);
+        Task firstTask = new Task("Заняться спортом", "Совершить утреннюю пробежку", Status.NEW);
+        Task secondTask = new Task("Пообедать", "Приготовить обед", Status.NEW);
+
+        int task1 = tm.newTask(firstTask);
+        int task2 = tm.newTask(secondTask);
+
+        Epic firstEpic = new Epic("Сходить в магазин", "Закупиться продуктами по списку", Status.NEW);
+        int epic1 = tm.newEpic(firstEpic);
+
+        SubTask firstEpicSubTask = new SubTask("Подготовить список",
+                "подготовить список того что нужно купить",
+                Status.NEW, firstEpic);
+        SubTask firstEpicSubTask2 = new SubTask("Совершить покупки", "собрать корзину и оплатить товары",
+                Status.NEW, firstEpic);
+        SubTask firstEpicSubTask3 = new SubTask("Проектная деятельность",
+                "выполнить тз для Яндекс Практикума", Status.NEW, firstEpic);
+        int subTask1 = tm.newSubTask(firstEpicSubTask);
+        int subTask2 = tm.newSubTask(firstEpicSubTask2);
+        int subTask3 = tm.newSubTask(firstEpicSubTask3);
+
+        Epic secondEpic = new Epic("Учиться", "Выполнить задания по учёбе", Status.NEW);
+        int epic2 = tm.newEpic(secondEpic);
+
+        tm.getTask(task1);
+        tm.getEpic(epic1);
+        tm.getSubTask(subTask1);
+        tm.getSubTask(subTask2);
+        tm.getSubTask(subTask3);
+        tm.getSubTask(subTask1);
+        tm.getTask(task2);
+        tm.getTask(task1);
+
+        FileBackedTasksManager newTm = Manager.getFileBacked();
+
+        System.out.println(newTm.getHistory());
     }
 }
