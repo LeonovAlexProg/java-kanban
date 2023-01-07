@@ -10,6 +10,8 @@ public class Manager {
     }
 
     public static FileBackedTasksManager getFileBacked() {
+        //не понимаю как указать путь к файлу в виде одного имени, выдаёт FileNotFoundException
+        // return new FileBackedTasksManager("TaskFile.csv");
         return new FileBackedTasksManager("src/ru/yandex/practicum/resources/TaskFile.csv");
     }
 }
