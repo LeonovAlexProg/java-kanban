@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FileBackedTasksManager extends InMemoryTaskManager{
-    private final Path CSV_FILE;
+    private final Path csvFile;
 
     public FileBackedTasksManager(String csvFilePath) {
         super();
-        CSV_FILE = Paths.get(csvFilePath);
+        csvFile = Paths.get(csvFilePath);
     }
 
     private void save(){
-        try (FileWriter fw = new FileWriter(CSV_FILE.toFile())){
+        try (FileWriter fw = new FileWriter(csvFile.toFile())){
             fw.write("id,type,name,status,description,epic\n");
 
             for (Task tasks : tasks.values()) {
@@ -209,23 +209,23 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
 
     @Override
     public Task getTask(int id) {
-        historyManager.add(tasks.get(id));
+        Task task = super.getTask(id);
         save();
-        return tasks.get(id);
+        return task;
     }
 
     @Override
     public Epic getEpic(int id) {
-        historyManager.add(epics.get(id));
+        Epic epic = super.getEpic(id);
         save();
-        return epics.get(id);
+        return epic;
     }
 
     @Override
     public SubTask getSubTask(int id) {
-        historyManager.add(subTasks.get(id));
+        SubTask subTask = super.getSubTask(id);
         save();
-        return subTasks.get(id);
+        return subTask;
     }
 
     public static void main(String[] args) {
@@ -264,7 +264,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
         tm.getTask(task1);
 
         FileBackedTasksManager newTm = Manager.getFileBacked();
-        newTm = FileBackedTasksManager.loadFromFile(newTm.CSV_FILE.toFile());
+        newTm = FileBackedTasksManager.loadFromFile(newTm.csvFile.toFile());
         int epic3 = newTm.newEpic(secondEpic);
 
         int subTask4 = newTm.newSubTask(firstEpicSubTask);
