@@ -1,6 +1,10 @@
 package ru.yandex.practicum.tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Epic extends Task{
     protected ArrayList<Integer> subTasks;
@@ -29,7 +33,7 @@ public class Epic extends Task{
         return subTasks;
     }
 
-    public void setSubTasks(ArrayList<Integer> subTasks) {
-        this.subTasks = subTasks;
-    }
+//    public void setSubTasks(ArrayList<Integer> subTasks) {
+//        this.subTasks = subTasks;
+//    }
 }

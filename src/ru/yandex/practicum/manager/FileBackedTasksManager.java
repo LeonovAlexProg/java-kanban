@@ -43,8 +43,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
         }
     }
 
-    //изменил сигнатуру метода, т.к. старая не соответствовала тз. Сам заметил...
-    private static FileBackedTasksManager loadFromFile(File file) {
+    //Изменил сигнатуру метода, т.к. старая не соответствовала тз. Сам заметил...
+    public static FileBackedTasksManager loadFromFile(File file) {
         FileBackedTasksManager tm = new FileBackedTasksManager(file.getPath());
         if (file.exists()) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -54,7 +54,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
                     lines.add(br.readLine());
                 }
 
-                for (int i = 1; i < lines.size() - 2; i++) {
+                for (int i = 1; true; i++) {
+                    if (lines.get(i).isEmpty()) {
+                        break;
+                    }
+
                     String[] taskLine = lines.get(i).split(",");
                     int taskId = Integer.parseInt(taskLine[0]);
 
@@ -84,14 +88,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
                 }
 
                 List<Integer> history = historyFromString(lines.get(lines.size() - 1));
-
-                for (Integer id : history) {
-                    if (tm.tasks.containsKey(id)) {
-                        tm.historyManager.add(tm.tasks.get(id));
-                    } else if (tm.epics.containsKey(id)) {
-                        tm.historyManager.add(tm.epics.get(id));
-                    } else {
-                        tm.historyManager.add(tm.subTasks.get(id));
+                if (history != null) {
+                    for (Integer id : history) {
+                        if (tm.tasks.containsKey(id)) {
+                            tm.historyManager.add(tm.tasks.get(id));
+                        } else if (tm.epics.containsKey(id)) {
+                            tm.historyManager.add(tm.epics.get(id));
+                        } else {
+                            tm.historyManager.add(tm.subTasks.get(id));
+                        }
                     }
                 }
             } catch (IOException exception) {
@@ -117,13 +122,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
     }
 
     static List<Integer> historyFromString(String value) {
-        List<Integer> history = new ArrayList<>();
+        if (!value.isEmpty()) {
+            List<Integer> history = new ArrayList<>();
 
-        for (String str : value.split(",")) {
-            history.add(Integer.parseInt(str));
+            for (String str : value.split(",")) {
+                history.add(Integer.parseInt(str));
+            }
+
+            return history;
         }
-
-        return history;
+        return null;
     }
 
     @Override
@@ -254,6 +262,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
         Epic secondEpic = new Epic("Учиться", "Выполнить задания по учёбе", Status.NEW);
         int epic2 = tm.newEpic(secondEpic);
 
+        tm.getTask(task1);
         tm.getTask(task1);
         tm.getEpic(epic1);
         tm.getSubTask(subTask1);

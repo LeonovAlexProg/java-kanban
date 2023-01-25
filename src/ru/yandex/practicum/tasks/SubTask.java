@@ -1,11 +1,13 @@
 package ru.yandex.practicum.tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class SubTask extends Task{
     protected int epicId;
 
     public SubTask(String name, String info, Status status, Epic epic) {
         super(name, info, status);
-
         this.epicId = epic.getId();
     }
 

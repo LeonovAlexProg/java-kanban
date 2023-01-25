@@ -1,16 +1,42 @@
 package ru.yandex.practicum.tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Task {
     protected String name;
     protected String info;
     protected Integer id;
     protected Status status;
 
+    protected Duration duration;
+    protected LocalDateTime startTime;
+
     public Task(String name, String info, Status status) {
         this.name = name;
         this.info = info;
         this.id = null;
         this.status = status;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
     }
 
     @Override
