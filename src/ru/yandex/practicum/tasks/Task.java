@@ -19,6 +19,15 @@ public class Task {
         this.status = status;
     }
 
+    public Task(String name, String info, Status status, Duration duration, LocalDateTime startTime) {
+        this.name = name;
+        this.info = info;
+        this.id = null;
+        this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
     public Duration getDuration() {
         return duration;
     }
@@ -36,7 +45,10 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return startTime.plus(duration);
+        if (duration != null && startTime != null) {
+            return startTime.plus(duration);
+        }
+        return null;
     }
 
     @Override
@@ -50,7 +62,14 @@ public class Task {
     }
 
     public String toCsvString() {
-        return String.format("%d,%s,%s,%s,%s,%n", id, TaskTypes.TASK, name, status, info);
+        StringBuilder stringBuilder = new StringBuilder();
+        if (startTime != null) {
+            stringBuilder.append(" ,")
+                    .append(startTime).append(",")
+                    .append(duration).append(",")
+                    .append(getEndTime());
+        }
+        return String.format("%d,%s,%s,%s,%s,%s%n", id, TaskTypes.TASK, name, status, info, stringBuilder.toString());
     }
 
     public String getName() {

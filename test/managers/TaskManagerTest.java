@@ -9,10 +9,13 @@ import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.SubTask;
 import ru.yandex.practicum.tasks.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 abstract class TaskManagerTest<T extends TaskManager> {
+    LocalDateTime actualDateTime = LocalDateTime.now();
     protected T taskManager;
     protected Task task;
     protected Epic epic;
@@ -24,10 +27,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @BeforeEach
     void setUpTasks() {
-        task = new Task("Task 1", "test", Status.NEW);
+        task = new Task("Task 1", "test", Status.NEW, Duration.ofHours(2),
+                LocalDateTime.from(actualDateTime));
         epic = new Epic("Epic", "test", Status.NEW);
         epic.setId(-1);
-        subTask = new SubTask("SubTask 1", "test", Status.NEW, epic);
+        subTask = new SubTask("SubTask 1", "test", Status.NEW, epic, Duration.ofHours(3),
+                LocalDateTime.from(task.getStartTime().plusHours(3)));
     }
 
     @Test
@@ -479,5 +484,147 @@ abstract class TaskManagerTest<T extends TaskManager> {
         actualList = taskManager.getHistory();
 
         assertArrayEquals(expectedList.toArray(), actualList.toArray());
+    }
+
+    @Test
+    public void shouldReturnTwoHoursDurationFromTask() {
+        Duration expectedDuration = Duration.ofHours(2);
+        Duration actualDuration;
+
+        taskManager.newTask(task);
+        actualDuration = taskManager.getTask(1).getDuration();
+
+        assertEquals(expectedDuration, actualDuration);
+    }
+
+
+    @Test
+    public void shouldReturnNullDurationAndStartTimeAndEndTimeForEpicWithoutSubtasks() {
+        Duration actualDuration = null;
+        LocalDateTime actualStartTime = null;
+        LocalDateTime actualEndTime = null;
+
+        taskManager.newEpic(epic);
+        actualDuration = epic.getDuration();
+        actualStartTime = epic.getStartTime();
+        actualEndTime = epic.getEndTime();
+
+        assertNull(actualDuration);
+        assertNull(actualStartTime);
+        assertNull(actualEndTime);
+    }
+
+    @Test
+    public void shouldReturnDurationOfThreeAndStartTimeForEpicWithOneSubTask() {
+        Duration expectedDuration = Duration.ofHours(3);
+        Duration actualDuration;
+        LocalDateTime expectedStartTime = subTask.getStartTime();
+        LocalDateTime actualStartTime;
+        LocalDateTime expectedEndTime = subTask.getEndTime();
+        LocalDateTime actualEndTime;
+
+        epic.setId(1);
+        taskManager.newEpic(epic);
+        subTask.setEpicId(1);
+        taskManager.newSubTask(subTask);
+
+        actualDuration = epic.getDuration();
+        actualStartTime = epic.getStartTime();
+        actualEndTime = epic.getEndTime();
+
+        assertEquals(expectedDuration, actualDuration);
+        assertEquals(expectedStartTime, actualStartTime);
+        assertEquals(expectedEndTime, actualEndTime);
+    }
+
+    @Test
+    public void shouldReturnStartTimeOfFirstSubTaskForEpicWithTwoSubTasks() {
+        SubTask firstSubTask = subTask;
+        SubTask secondSubTask = new SubTask("SubTask 2", "test", Status.NEW, epic, Duration.ofHours(3),
+                LocalDateTime.from(task.getStartTime().plusHours(6)));
+        LocalDateTime expectedStartTime = firstSubTask.getStartTime();
+        LocalDateTime actualStartTime;
+
+        epic.setId(1);
+        taskManager.newEpic(epic);
+        subTask.setEpicId(1);
+        secondSubTask.setEpicId(1);
+        taskManager.newSubTask(subTask);
+        taskManager.newSubTask(secondSubTask);
+        actualStartTime = epic.getStartTime();
+
+        assertEquals(expectedStartTime, actualStartTime);
+    }
+
+    @Test
+    public void shouldReturnEndTimeOfSecondSubTaskForEpicWithTwoSubTasks() {
+        SubTask firstSubTask = subTask;
+        SubTask secondSubTask = new SubTask("SubTask 2", "test", Status.NEW, epic, Duration.ofHours(3),
+                LocalDateTime.from(task.getStartTime().plusHours(6)));
+        LocalDateTime expectedEndTime = secondSubTask.getEndTime();
+        LocalDateTime actualEndTime;
+
+        epic.setId(1);
+        taskManager.newEpic(epic);
+        subTask.setEpicId(1);
+        secondSubTask.setEpicId(1);
+        taskManager.newSubTask(subTask);
+        taskManager.newSubTask(secondSubTask);
+        actualEndTime = epic.getEndTime();
+
+        assertEquals(expectedEndTime, actualEndTime);
+    }
+
+    @Test
+    public void shouldReturnEndTimeOfFirstSubTaskAfterDeleteOfSecondFromEpic() {
+        SubTask firstSubTask = subTask;
+        SubTask secondSubTask = new SubTask("SubTask 2", "test", Status.NEW, epic, Duration.ofHours(3),
+                LocalDateTime.from(task.getStartTime().plusHours(6)));
+        LocalDateTime expectedEndTime = firstSubTask.getEndTime();
+        LocalDateTime actualEndTime;
+
+        epic.setId(1);
+        taskManager.newEpic(epic);
+        subTask.setEpicId(1);
+        secondSubTask.setEpicId(1);
+        taskManager.newSubTask(subTask);
+        taskManager.newSubTask(secondSubTask);
+        taskManager.deleteSubTaskById(3);
+        actualEndTime = epic.getEndTime();
+
+        assertEquals(expectedEndTime, actualEndTime);
+    }
+
+    @Test
+    public void shouldReturnSumOfAllSubTasksDurationFromEpic() {
+        SubTask firstSubTask = subTask;
+        SubTask secondSubTask = new SubTask("SubTask 2", "test", Status.NEW, epic, Duration.ofHours(6),
+                LocalDateTime.from(task.getStartTime().plusHours(6)));
+        Duration expectedDuration = Duration.ofHours(9);
+        Duration actualDuration;
+
+        epic.setId(1);
+        taskManager.newEpic(epic);
+        subTask.setEpicId(1);
+        secondSubTask.setEpicId(1);
+        taskManager.newSubTask(subTask);
+        taskManager.newSubTask(secondSubTask);
+        actualDuration = epic.getDuration();
+
+        assertEquals(expectedDuration, actualDuration);
+    }
+
+    @Test
+    public void shouldReturnCorrectEndTimeForSubTask() {
+        LocalDateTime expectedEndTime = LocalDateTime.from(actualDateTime.plusHours(6));
+        LocalDateTime actualEndTime;
+
+        epic.setId(1);
+        taskManager.newEpic(epic);
+        subTask.setEpicId(1);
+        taskManager.newSubTask(subTask);
+        actualEndTime = taskManager.getSubTask(2).getEndTime();
+
+        assertEquals(expectedEndTime, actualEndTime);
     }
 }

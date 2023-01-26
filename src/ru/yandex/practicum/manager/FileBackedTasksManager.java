@@ -6,6 +6,8 @@ import ru.yandex.practicum.tasks.*;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +22,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
 
     private void save(){
         try (FileWriter fw = new FileWriter(csvFile.toFile())){
-            fw.write("id,type,name,status,description,epic\n");
+            fw.write("id,type,name,status,description,epic,start time, duration, end time\n");
 
             for (Task tasks : tasks.values()) {
                 fw.write(tasks.toCsvString());
@@ -67,12 +69,26 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
 
                     if (taskLine[1].equals(TaskTypes.TASK.toString())) {
                         Task task = new Task(taskLine[2], taskLine[4], Status.valueOf(taskLine[3]));
+                        if (taskLine.length > 6) {
+                            LocalDateTime startTime = LocalDateTime.parse(taskLine[6]);
+                            Duration duration = Duration.parse(taskLine[7]);
+                            task.setStartTime(startTime);
+                            task.setDuration(duration);
+                        }
                         task.setId(taskId);
 
                         tm.tasks.put(task.getId(), task);
                     } else if (taskLine[1].equals(TaskTypes.EPIC.toString())) {
                         Epic epic = new Epic(taskLine[2], taskLine[4], Status.valueOf(taskLine[3]));
                         epic.setId(taskId);
+                        if (taskLine.length > 6) {
+                            LocalDateTime startTime = LocalDateTime.parse(taskLine[6]);
+                            Duration duration = Duration.parse(taskLine[7]);
+                            LocalDateTime endTime = LocalDateTime.parse(taskLine[8]);
+                            epic.setStartTime(startTime);
+                            epic.setDuration(duration);
+                            epic.setEndTime(endTime);
+                        }
 
                         tm.epics.put(epic.getId(), epic);
                     } else {
@@ -80,6 +96,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
 
                         SubTask subTask = new SubTask(taskLine[2], taskLine[4], Status.valueOf(taskLine[3]), epic);
                         subTask.setId(taskId);
+
+                        if (taskLine.length > 6) {
+                            LocalDateTime startTime = LocalDateTime.parse(taskLine[6]);
+                            Duration duration = Duration.parse(taskLine[7]);
+                            subTask.setStartTime(startTime);
+                            subTask.setDuration(duration);
+                        }
 
                         epic.getSubTasks().add(subTask.getId());
 

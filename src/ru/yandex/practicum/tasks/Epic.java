@@ -8,11 +8,27 @@ import java.util.Map;
 
 public class Epic extends Task{
     protected ArrayList<Integer> subTasks;
+    protected LocalDateTime endTime;
 
     public Epic(String name, String info, Status status) {
         super(name, info, status);
         this.subTasks = new ArrayList<>();
     }
+
+    public Epic(String name, String info, Status status, Duration duration, LocalDateTime startTime) {
+        super(name, info, status, duration, startTime);
+        this.subTasks = new ArrayList<>();
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
 
     @Override
     public String toString() {
@@ -26,7 +42,14 @@ public class Epic extends Task{
     }
 
     public String toCsvString() {
-        return String.format("%d,%s,%s,%s,%s,%n", id, TaskTypes.EPIC, name, status, info);
+        StringBuilder stringBuilder = new StringBuilder();
+        if (startTime != null) {
+            stringBuilder.append(" ,")
+                    .append(startTime).append(",")
+                    .append(duration).append(",")
+                    .append(getEndTime());
+        }
+        return String.format("%d,%s,%s,%s,%s,%s%n", id, TaskTypes.EPIC, name, status, info, stringBuilder.toString());
     }
 
     public ArrayList<Integer> getSubTasks() {

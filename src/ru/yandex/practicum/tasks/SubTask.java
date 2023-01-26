@@ -11,6 +11,11 @@ public class SubTask extends Task{
         this.epicId = epic.getId();
     }
 
+    public SubTask(String name, String info, Status status, Epic epic, Duration duration, LocalDateTime startTime) {
+        super(name, info, status, duration, startTime);
+        this.epicId = epic.getId();
+    }
+
     @Override
     public String toString() {
         return "SubTask{" +
@@ -23,7 +28,15 @@ public class SubTask extends Task{
     }
 
     public String toCsvString() {
-        return String.format("%d,%s,%s,%s,%s,%s%n", id, TaskTypes.SUBTASK, name, status, info, epicId);
+        StringBuilder stringBuilder = new StringBuilder();
+        if (startTime != null) {
+            stringBuilder.append(startTime).append(",");
+            stringBuilder.append(duration).append(",");
+            stringBuilder.append(getEndTime());
+        }
+        return String.format("%d,%s,%s,%s,%s,%s,%s%n", id, TaskTypes.SUBTASK, name, status, info, epicId,
+                stringBuilder.toString());
+       // return String.format("%d,%s,%s,%s,%s,%s%n", id, TaskTypes.SUBTASK, name, status, info, epicId);
     }
 
     public int getEpicId() {
