@@ -6,6 +6,8 @@ import ru.yandex.practicum.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public interface TaskManager {
 
@@ -38,4 +40,6 @@ public interface TaskManager {
     void deleteSubTaskById(Integer id);
 
     List<Task> getHistory();
+
+    Set<Task> getPrioritizedTask();
 }

@@ -9,10 +9,13 @@ import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.SubTask;
 import ru.yandex.practicum.tasks.Task;
 
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 abstract class TaskManagerTest<T extends TaskManager> {
     LocalDateTime actualDateTime = LocalDateTime.now();
@@ -500,9 +503,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void shouldReturnNullDurationAndStartTimeAndEndTimeForEpicWithoutSubtasks() {
-        Duration actualDuration = null;
-        LocalDateTime actualStartTime = null;
-        LocalDateTime actualEndTime = null;
+        Duration actualDuration;
+        LocalDateTime actualStartTime;
+        LocalDateTime actualEndTime;
 
         taskManager.newEpic(epic);
         actualDuration = epic.getDuration();
@@ -558,7 +561,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void shouldReturnEndTimeOfSecondSubTaskForEpicWithTwoSubTasks() {
-        SubTask firstSubTask = subTask;
         SubTask secondSubTask = new SubTask("SubTask 2", "test", Status.NEW, epic, Duration.ofHours(3),
                 LocalDateTime.from(task.getStartTime().plusHours(6)));
         LocalDateTime expectedEndTime = secondSubTask.getEndTime();
@@ -597,7 +599,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void shouldReturnSumOfAllSubTasksDurationFromEpic() {
-        SubTask firstSubTask = subTask;
         SubTask secondSubTask = new SubTask("SubTask 2", "test", Status.NEW, epic, Duration.ofHours(6),
                 LocalDateTime.from(task.getStartTime().plusHours(6)));
         Duration expectedDuration = Duration.ofHours(9);
@@ -626,5 +627,82 @@ abstract class TaskManagerTest<T extends TaskManager> {
         actualEndTime = taskManager.getSubTask(2).getEndTime();
 
         assertEquals(expectedEndTime, actualEndTime);
+    }
+
+    @Test
+    public void shouldReturnEmptySetForEmptyPrioritizedSet() {
+        Set<Task> expectedSet = new TreeSet<>();
+        Set<Task> actualSet;
+
+        actualSet = taskManager.getPrioritizedTask();
+
+        assertEquals(expectedSet, actualSet);
+    }
+
+    @Test
+    public void shouldReturnActualSetForNotEmptyPrioritizedSet() {
+        epic.setId(2);
+        subTask.setEpicId(2);
+        Set<Task> expectedSet = Set.of(
+                task,
+                subTask,
+                epic
+        );
+        Set<Task> actualSet;
+
+        taskManager.newTask(task);
+        taskManager.newEpic(epic);
+        taskManager.newSubTask(subTask);
+        actualSet = taskManager.getPrioritizedTask();
+
+        assertEquals(expectedSet, actualSet);
+    }
+
+    @Test
+    public void shouldReturnBothTasksWithoutTimeCollisionsFromTaskManager() {
+        Task task1 = new Task("task1", "test", Status.NEW, Duration.ofHours(2), actualDateTime);
+        Task task2 = new Task("task2", "test", Status.NEW, Duration.ofHours(2), actualDateTime.plusHours(3));
+        List<Task> expectedList = List.of(
+                task1,
+                task2
+        );
+        Set<Task> expectedSet = Set.of(
+                task1,
+                task2
+        );
+        List<Task> actualList;
+        Set<Task> actualSet;
+
+        taskManager.newTask(task1);
+        taskManager.newTask(task2);
+        actualList = taskManager.getAllTasks();
+        actualSet = taskManager.getPrioritizedTask();
+
+        assertEquals(expectedList, actualList);
+        assertEquals(expectedSet, actualSet);
+
+    }
+
+    @Test
+    public void shouldReturnOneTaskFromTwoWithTimeCollisionsFromTaskManager() {
+        Task task1 = new Task("task1", "test", Status.NEW, Duration.ofHours(2), actualDateTime);
+        Task task2 = new Task("task2", "test", Status.NEW, Duration.ofHours(2), actualDateTime.plusHours(1));
+        List<Task> expectedList = List.of(
+                task1
+        );
+        Set<Task> expectedSet = Set.of(
+                task1
+        );
+        List<Task> actualList;
+        Set<Task> actualSet;
+
+        taskManager.newTask(task1);
+        taskManager.newTask(task2);
+        actualList = taskManager.getAllTasks();
+        actualSet = taskManager.getPrioritizedTask();
+
+        assertEquals(expectedList, actualList);
+        assertEquals(expectedSet, actualSet);
+
     }
 }
