@@ -24,7 +24,7 @@ public class InMemoryTaskManager implements TaskManager{
         this.id = 1;
         historyManager = Manager.getDefaultHistory();
         prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime,
-                Comparator.nullsFirst(Comparator.naturalOrder())).thenComparing(Task::getId));
+                Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(Task::getId));
     }
 
     protected boolean checkIntersections(Task task) {
@@ -44,8 +44,8 @@ public class InMemoryTaskManager implements TaskManager{
                     return false;
                 if (taskStartTime.isAfter(currentTaskStartTime) && taskEndTime.isBefore(currentTaskEndTIme))
                     return false;
-                return true;
             }
+            return true;
         }
         return true;
     }
@@ -245,8 +245,8 @@ public class InMemoryTaskManager implements TaskManager{
             subTasks.remove(subTask);
         }
 
-        calculateEpicTime(epic);
         epic.getSubTasks().clear();
+        calculateEpicTime(epic);
     }
 
     @Override

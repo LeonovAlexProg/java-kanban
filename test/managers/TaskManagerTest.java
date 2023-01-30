@@ -647,7 +647,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 task,
                 subTask
         );
-
         List<Task> actualList;
 
         taskManager.newTask(task);
@@ -666,21 +665,17 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 task1,
                 task2
         );
-        List<Task> expectedPrioritizedList = List.of(
-                task1,
-                task2
-        );
         List<Task> actualList;
-        List<Task> actualPrioritizedList;
 
         taskManager.newTask(task1);
         taskManager.newTask(task2);
         actualList = taskManager.getAllTasks();
-        actualPrioritizedList = taskManager.getPrioritizedTask();
 
         assertEquals(expectedList, actualList);
-        assertEquals(expectedPrioritizedList, actualPrioritizedList);
 
+        actualList = taskManager.getPrioritizedTask();
+
+        assertEquals(expectedList, actualList);
     }
 
     @Test
@@ -690,19 +685,16 @@ abstract class TaskManagerTest<T extends TaskManager> {
         List<Task> expectedList = List.of(
                 task1
         );
-        List<Task> expectedPrioritizedList = List.of(
-                task1
-        );
         List<Task> actualList;
-        List<Task> actualPrioritizedList;
 
         taskManager.newTask(task1);
         taskManager.newTask(task2);
         actualList = taskManager.getAllTasks();
-        actualPrioritizedList = taskManager.getPrioritizedTask();
 
         assertEquals(expectedList, actualList);
-        assertEquals(expectedPrioritizedList, actualPrioritizedList);
 
+        actualList = taskManager.getPrioritizedTask();
+
+        assertEquals(expectedList, actualList);
     }
 }
