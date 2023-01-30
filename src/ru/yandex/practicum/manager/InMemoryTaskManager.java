@@ -23,18 +23,8 @@ public class InMemoryTaskManager implements TaskManager{
         this.subTasks = new HashMap<>();
         this.id = 1;
         historyManager = Manager.getDefaultHistory();
-        prioritizedTasks = new TreeSet<>((Task t1, Task t2) -> {
-            if (t1.getStartTime() != null && t2.getStartTime() != null) {
-                return t1.getStartTime().compareTo(t2.getStartTime());
-            } else if (t1.getStartTime() != null && t2.getStartTime() == null) {
-                return -1;
-            } else if (t1.getStartTime() == null && t2.getStartTime() != null) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-        );
+        prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime,
+                Comparator.nullsFirst(Comparator.naturalOrder())).thenComparing(Task::getId));
     }
 
     protected boolean checkIntersections(Task task) {
@@ -48,11 +38,12 @@ public class InMemoryTaskManager implements TaskManager{
                 LocalDateTime currentTaskStartTime = currentTask.getStartTime();
                 LocalDateTime currentTaskEndTIme = currentTask.getEndTime();
 
-                if (taskStartTime.isAfter(currentTaskStartTime) && taskStartTime.isBefore(currentTaskEndTIme))
+                if (taskStartTime.isBefore(currentTaskStartTime) && taskEndTime.isAfter(currentTaskStartTime))
                     return false;
-                if (taskEndTime.isAfter(currentTaskStartTime) && taskEndTime.isBefore(currentTaskEndTIme))
+                if (taskStartTime.isBefore(currentTaskEndTIme) && taskEndTime.isAfter(currentTaskEndTIme))
                     return false;
-
+                if (taskStartTime.isAfter(currentTaskStartTime) && taskEndTime.isBefore(currentTaskEndTIme))
+                    return false;
                 return true;
             }
         }
@@ -60,8 +51,8 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     @Override
-    public Set<Task> getPrioritizedTask() {
-        return prioritizedTasks;
+    public List<Task> getPrioritizedTask() {
+        return new ArrayList<>(prioritizedTasks);
     }
 
     public List<Task> getHistory() {
@@ -165,7 +156,6 @@ public class InMemoryTaskManager implements TaskManager{
             epic.setId(id);
             calculateEpicTime(epic);
             epics.put(id, epic);
-            prioritizedTasks.add(epic);
             return id;
         }
         return -1;
@@ -231,7 +221,6 @@ public class InMemoryTaskManager implements TaskManager{
         if (epics.containsKey(id)) {
             deleteEpicSubTasks(epics.get(id));
             historyManager.remove(id);
-            prioritizedTasks.remove(epics.get(id));
             epics.remove(id);
         }
     }

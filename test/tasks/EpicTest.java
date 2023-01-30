@@ -1,9 +1,6 @@
 package tasks;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import ru.yandex.practicum.manager.Manager;
 import ru.yandex.practicum.manager.TaskManager;
 import ru.yandex.practicum.tasks.Epic;
@@ -11,6 +8,9 @@ import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.SubTask;
 import ru.yandex.practicum.tasks.TaskTypes;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +37,14 @@ class EpicTest {
                 new SubTask("subtask2", "test subtask", Status.NEW, manager.getEpic(epicId)),
                 new SubTask("subtask3", "test subtask", Status.NEW, manager.getEpic(epicId))
         );
+    }
+
+    @AfterEach
+    public void clearCsv() {
+        try (FileWriter fw = new FileWriter(Paths.get("test/resources/TaskFile.csv").toFile(),false)){
+        } catch (IOException exc) {
+            exc.getCause();
+        }
     }
 
     @Test

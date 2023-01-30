@@ -1,17 +1,18 @@
 package managers;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.manager.FileBackedTasksManager;
-import ru.yandex.practicum.manager.InMemoryTaskManager;
-import ru.yandex.practicum.manager.Manager;
-import ru.yandex.practicum.manager.TaskManager;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.SubTask;
 import ru.yandex.practicum.tasks.Task;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,18 +21,28 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
+    String testCsvPath = "test/resources/TaskFile.csv";
+
     @BeforeEach
     public void initInMemoryManager() {
-        super.initManager(new FileBackedTasksManager("test/resources/TaskFile.csv"));
+        super.initManager(new FileBackedTasksManager(testCsvPath));
         taskManager.deleteAllTasks();
+    }
+
+    @AfterEach
+    public void clearCsv() {
+        try (FileWriter fw = new FileWriter(Paths.get("test/resources/TaskFile.csv").toFile(),false)){
+        } catch (IOException exc) {
+            exc.getCause();
+        }
     }
 
     @Test
     public void shouldLoadEmptyTaskManagerFromEmptyCsvFile() {
         FileBackedTasksManager newTaskManager = FileBackedTasksManager.loadFromFile(
-                Path.of("test/resources/TaskFile.csv").toFile()
+                Path.of(testCsvPath).toFile()
         );
-        List<Task> actualTaskList = new ArrayList<>();
+        List<Task> actualTaskList;
 
         actualTaskList = newTaskManager.getAllTasks();
 
@@ -44,7 +55,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
 
         taskManager.newEpic(epic);
         FileBackedTasksManager newTaskManager = FileBackedTasksManager.loadFromFile(
-                Path.of("test/resources/TaskFile.csv").toFile()
+                Path.of(testCsvPath).toFile()
         );
 
         assertEquals(epic.getId(), newTaskManager.getEpic(1).getId());
@@ -58,7 +69,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         List<Task> expectedList = new ArrayList<>();
         List<Task> actualList;
         FileBackedTasksManager newTaskManager = FileBackedTasksManager.loadFromFile(
-                Path.of("test/resources/TaskFile.csv").toFile()
+                Path.of(testCsvPath).toFile()
         );
 
         taskManager.newTask(task);
@@ -79,7 +90,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
 
         taskManager.newTask(task);
         newTaskManager = FileBackedTasksManager.loadFromFile(
-                Path.of("test/resources/TaskFile.csv").toFile()
+                Path.of(testCsvPath).toFile()
         );
         actualStartTime = newTaskManager.getTask(1).getStartTime();
         actualEndTime = newTaskManager.getTask(1).getEndTime();
@@ -104,14 +115,14 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         LocalDateTime actualEndTime;
         Duration actualDuration;
 
-        taskManager.newEpic(epic);
-        taskManager.newSubTask(subTask);
+        int epicId = taskManager.newEpic(epic);
+        int subTaskId = taskManager.newSubTask(subTask);
         newTaskManager = FileBackedTasksManager.loadFromFile(
                 Path.of("test/resources/TaskFile.csv").toFile()
         );
-        actualStartTime = newTaskManager.getEpic(1).getStartTime();
-        actualEndTime = newTaskManager.getEpic(1).getEndTime();
-        actualDuration = newTaskManager.getEpic(1).getDuration();
+        actualStartTime = newTaskManager.getEpic(epicId).getStartTime();
+        actualEndTime = newTaskManager.getEpic(epicId).getEndTime();
+        actualDuration = newTaskManager.getEpic(epicId).getDuration();
 
         assertEquals(expectedStartTime, actualStartTime);
         assertEquals(expectedDuration, actualDuration);

@@ -1,15 +1,13 @@
 package ru.yandex.practicum.manager;
 
+import java.nio.file.Paths;
+
 public class Manager {
     public static TaskManager getDefault() {
-        return new InMemoryTaskManager();
+        return FileBackedTasksManager.loadFromFile(Paths.get("test/resources/TaskFile.csv").toFile());
     }
 
     public static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
-    }
-
-    public static FileBackedTasksManager getFileBacked() {
-        return new FileBackedTasksManager("src/ru/yandex/practicum/resources/TaskFile.csv");
     }
 }
