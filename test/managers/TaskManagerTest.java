@@ -631,31 +631,30 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void shouldReturnEmptySetForEmptyPrioritizedSet() {
-        Set<Task> expectedSet = new TreeSet<>();
-        Set<Task> actualSet;
+        List<Task> expectedList = new ArrayList<>();
+        List<Task> actualList;
 
-        actualSet = taskManager.getPrioritizedTask();
+        actualList = taskManager.getPrioritizedTask();
 
-        assertEquals(expectedSet, actualSet);
+        assertEquals(expectedList, actualList);
     }
 
     @Test
     public void shouldReturnActualSetForNotEmptyPrioritizedSet() {
         epic.setId(2);
         subTask.setEpicId(2);
-        Set<Task> expectedSet = Set.of(
+        List<Task> expectedList = List.of(
                 task,
-                subTask,
-                epic
+                subTask
         );
-        Set<Task> actualSet;
+        List<Task> actualList;
 
         taskManager.newTask(task);
         taskManager.newEpic(epic);
         taskManager.newSubTask(subTask);
-        actualSet = taskManager.getPrioritizedTask();
+        actualList = taskManager.getPrioritizedTask();
 
-        assertEquals(expectedSet, actualSet);
+        assertEquals(expectedList, actualList);
     }
 
     @Test
@@ -666,21 +665,17 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 task1,
                 task2
         );
-        Set<Task> expectedSet = Set.of(
-                task1,
-                task2
-        );
         List<Task> actualList;
-        Set<Task> actualSet;
 
         taskManager.newTask(task1);
         taskManager.newTask(task2);
         actualList = taskManager.getAllTasks();
-        actualSet = taskManager.getPrioritizedTask();
 
         assertEquals(expectedList, actualList);
-        assertEquals(expectedSet, actualSet);
 
+        actualList = taskManager.getPrioritizedTask();
+
+        assertEquals(expectedList, actualList);
     }
 
     @Test
@@ -690,19 +685,16 @@ abstract class TaskManagerTest<T extends TaskManager> {
         List<Task> expectedList = List.of(
                 task1
         );
-        Set<Task> expectedSet = Set.of(
-                task1
-        );
         List<Task> actualList;
-        Set<Task> actualSet;
 
         taskManager.newTask(task1);
         taskManager.newTask(task2);
         actualList = taskManager.getAllTasks();
-        actualSet = taskManager.getPrioritizedTask();
 
         assertEquals(expectedList, actualList);
-        assertEquals(expectedSet, actualSet);
 
+        actualList = taskManager.getPrioritizedTask();
+
+        assertEquals(expectedList, actualList);
     }
 }

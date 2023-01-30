@@ -30,7 +30,7 @@ public class Main {
         int subTask2 = inMemoryTaskManager.newSubTask(firstEpicSubTask2);
         int subTask3 = inMemoryTaskManager.newSubTask(firstEpicSubTask3);
 
-        Epic secondEpic = new Epic("Учиться", "Выполнить задания по учёбе", Status.NEW);
+         Epic secondEpic = new Epic("Учиться", "Выполнить задания по учёбе", Status.NEW);
         int epic2 = inMemoryTaskManager.newEpic(secondEpic);
 
         inMemoryTaskManager.getTask(task1);

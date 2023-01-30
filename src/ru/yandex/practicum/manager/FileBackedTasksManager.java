@@ -295,7 +295,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
         tm.getTask(task2);
         tm.getTask(task1);
 
-        FileBackedTasksManager newTm = Manager.getFileBacked();
+        FileBackedTasksManager newTm =  Manager.getFileBacked();
         newTm = FileBackedTasksManager.loadFromFile(newTm.csvFile.toFile());
         int epic3 = newTm.newEpic(secondEpic);
 
