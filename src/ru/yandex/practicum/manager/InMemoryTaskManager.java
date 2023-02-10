@@ -282,48 +282,90 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     protected void calculateEpicTime(Epic epic) {
+        boolean containsTimeData = false;
+
         if (!epic.getSubTasks().isEmpty()) {
-            ArrayList<SubTask> epicSubTasks = getEpicSubTasks(epic.getId());
-            
-            LocalDateTime earliestDateTime = epic.getStartTime();
-            LocalDateTime latestDateTime = epic.getEndTime();
+            LocalDateTime earliestDateTime = LocalDateTime.MAX;
+            LocalDateTime latestDateTime = LocalDateTime.MIN;
             Duration allDuration = Duration.ZERO;
 
-            if (!epicSubTasks.isEmpty()) {
-                earliestDateTime = epicSubTasks.get(0).getStartTime();
-                latestDateTime = epicSubTasks.get(0).getEndTime();
+            for (SubTask subTask : getEpicSubTasks(epic.getId())) {
+                if (subTask.getStartTime() != null & subTask.getDuration() != null) {
+                    containsTimeData = true;
+
+                    LocalDateTime subtaskEarliestDateTime = subTask.getStartTime();
+                    LocalDateTime subtaskLatestDateTime = subTask.getEndTime();
+                    Duration subtaskDuration = subTask.getDuration();
+
+                    if (subtaskEarliestDateTime.isBefore(earliestDateTime)) {
+                        earliestDateTime = subtaskEarliestDateTime;
+                    }
+                    if (subtaskLatestDateTime.isAfter(latestDateTime)) {
+                        latestDateTime = subtaskLatestDateTime;
+                    }
+                    if (subtaskDuration != null) {
+                        allDuration = allDuration.plus(subtaskDuration);
+                    }
+                }
+            }
+
+            if (containsTimeData) {
+                epic.setStartTime(earliestDateTime);
+                epic.setDuration(allDuration);
+                epic.setEndTime(latestDateTime);
             } else {
-                earliestDateTime = null;
-                latestDateTime = null;
                 epic.setStartTime(null);
                 epic.setDuration(null);
                 epic.setEndTime(null);
             }
-
-            for (SubTask subTask : epicSubTasks) {
-                if (subTask.getStartTime() != null) {
-                    if (subTask.getStartTime().isBefore(earliestDateTime)) {
-                        earliestDateTime = subTask.getStartTime();
-                    }
-                    if (subTask.getEndTime().isAfter(latestDateTime)) {
-                        latestDateTime = subTask.getEndTime();
-                    }
-                }
-
-                if (subTask.getDuration() != null) {
-                    allDuration = allDuration.plus(subTask.getDuration());
-                }
-            }
-
-            if (earliestDateTime != null && !earliestDateTime.isEqual(LocalDateTime.MAX)) {
-                epic.setStartTime(earliestDateTime);
-            }
-            if (latestDateTime != null && !latestDateTime.isEqual(LocalDateTime.MAX)) {
-                epic.setEndTime(latestDateTime);
-            }
-            if (allDuration != null) {
-                epic.setDuration(allDuration);
-            }
+        } else {
+            epic.setStartTime(null);
+            epic.setDuration(null);
+            epic.setEndTime(null);
         }
+
+//        if (!epic.getSubTasks().isEmpty()) {
+//            ArrayList<SubTask> epicSubTasks = getEpicSubTasks(epic.getId());
+//
+//            LocalDateTime earliestDateTime = epic.getStartTime();
+//            LocalDateTime latestDateTime = epic.getEndTime();
+//            Duration allDuration = Duration.ZERO;
+//
+//            if (!epicSubTasks.isEmpty()) {
+//                earliestDateTime = epicSubTasks.get(0).getStartTime();
+//                latestDateTime = epicSubTasks.get(0).getEndTime();
+//            } else {
+//                earliestDateTime = null;
+//                latestDateTime = null;
+//                epic.setStartTime(null);
+//                epic.setDuration(null);
+//                epic.setEndTime(null);
+//            }
+//
+//            for (SubTask subTask : epicSubTasks) {
+//                if (subTask.getStartTime() != null) {
+//                    if (subTask.getStartTime().isBefore(earliestDateTime)) {
+//                        earliestDateTime = subTask.getStartTime();
+//                    }
+//                    if (subTask.getEndTime().isAfter(latestDateTime)) {
+//                        latestDateTime = subTask.getEndTime();
+//                    }
+//                }
+//
+//                if (subTask.getDuration() != null) {
+//                    allDuration = allDuration.plus(subTask.getDuration());
+//                }
+//            }
+//
+//            if (earliestDateTime != null && !earliestDateTime.isEqual(LocalDateTime.MAX)) {
+//                epic.setStartTime(earliestDateTime);
+//            }
+//            if (latestDateTime != null && !latestDateTime.isEqual(LocalDateTime.MAX)) {
+//                epic.setEndTime(latestDateTime);
+//            }
+//            if (allDuration != null && allDuration != Duration.ZERO) {
+//                epic.setDuration(allDuration);
+//            }
+//        }
     }
 }
