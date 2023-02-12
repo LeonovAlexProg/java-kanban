@@ -1,4 +1,4 @@
-package ru.yandex.practicum.server;
+package ru.yandex.practicum.servers.httptaskserver;
 
 public enum Endpoint {
     GET_TASK,

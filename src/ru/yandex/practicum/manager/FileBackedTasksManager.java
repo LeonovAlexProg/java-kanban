@@ -15,12 +15,17 @@ import java.util.stream.Collectors;
 public class FileBackedTasksManager extends InMemoryTaskManager{
     private final Path csvFile;
 
+    public FileBackedTasksManager() {
+        super();
+        csvFile = null;
+    }
+
     public FileBackedTasksManager(String csvFilePath) {
         super();
         csvFile = Paths.get(csvFilePath);
     }
 
-    private void save(){
+    protected void save(){
         try (FileWriter fw = new FileWriter(csvFile.toFile())){
             fw.write("id,type,name,status,description,epic,start time, duration, end time\n");
 

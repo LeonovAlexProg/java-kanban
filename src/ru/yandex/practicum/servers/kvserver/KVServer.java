@@ -1,4 +1,4 @@
-package ru.yandex.practicum.kvserver;
+package ru.yandex.practicum.servers.kvserver;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -14,7 +14,7 @@ import com.sun.net.httpserver.HttpServer;
  * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
  */
 public class KVServer {
-	public static final int PORT = 8078;
+	public static final int PORT = 8081;
 	private final String apiToken;
 	private final HttpServer server;
 	private final Map<String, String> data = new HashMap<>();
@@ -49,7 +49,6 @@ public class KVServer {
 				}
 				sendText(h, data.get(key));
 				System.out.println("Данные по ключу " + key + " успешно отправлены");
-				h.sendResponseHeaders(200, 0);
 			} else {
 				System.out.println("/load ждёт GET-запрос, а получил: " + h.getRequestMethod());
 				h.sendResponseHeaders(405, 0);
@@ -84,6 +83,7 @@ public class KVServer {
 				}
 				data.put(key, value);
 				System.out.println("Значение для ключа " + key + " успешно обновлено!");
+				h.sendResponseHeaders(200, 0);
 			} else {
 				System.out.println("/save ждёт POST-запрос, а получил: " + h.getRequestMethod());
 				h.sendResponseHeaders(405, 0);

@@ -1,4 +1,4 @@
-package ru.yandex.practicum.server;
+package ru.yandex.practicum.servers.httptaskserver;
 
 import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
@@ -54,7 +54,7 @@ public class HttpTaskServer {
         }
     }
 
-    class TasksHandler implements HttpHandler {
+    public class TasksHandler implements HttpHandler {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(Task.class, new TaskSerializer())
