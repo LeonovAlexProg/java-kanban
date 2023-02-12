@@ -99,7 +99,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
                     } else {
                         Epic epic = tm.epics.get(Integer.parseInt(taskLine[5]));
 
-                        SubTask subTask = new SubTask(taskLine[2], taskLine[4], Status.valueOf(taskLine[3]), epic);
+                        SubTask subTask = new SubTask(taskLine[2], taskLine[4], Status.valueOf(taskLine[3]), epic.getId());
                         subTask.setId(taskId);
 
                         if (taskLine.length > 6) {
@@ -278,11 +278,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
 
         SubTask firstEpicSubTask = new SubTask("Подготовить список",
                 "подготовить список того что нужно купить",
-                Status.NEW, firstEpic);
+                Status.NEW, firstEpic.getId());
         SubTask firstEpicSubTask2 = new SubTask("Совершить покупки", "собрать корзину и оплатить товары",
-                Status.NEW, firstEpic);
+                Status.NEW, firstEpic.getId());
         SubTask firstEpicSubTask3 = new SubTask("Проектная деятельность",
-                "выполнить тз для Яндекс Практикума", Status.NEW, firstEpic);
+                "выполнить тз для Яндекс Практикума", Status.NEW, firstEpic.getId());
         int subTask1 = tm.newSubTask(firstEpicSubTask);
         int subTask2 = tm.newSubTask(firstEpicSubTask2);
         int subTask3 = tm.newSubTask(firstEpicSubTask3);

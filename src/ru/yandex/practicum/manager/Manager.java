@@ -9,7 +9,7 @@ import java.nio.file.Paths;
  */
 public class Manager {
     public static TaskManager getDefault() {
-        return new InMemoryTaskManager();
+        return new HttpTaskManager("localhost:8081/");
     }
 
     public static HistoryManager getDefaultHistory() {

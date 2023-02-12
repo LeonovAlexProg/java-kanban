@@ -2,6 +2,7 @@ package ru.yandex.practicum.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import ru.yandex.practicum.serializers.TaskSerializers;
 import ru.yandex.practicum.servers.client.KVTaskClient;
 import ru.yandex.practicum.servers.httptaskserver.HttpTaskServer;
 import ru.yandex.practicum.tasks.Epic;
@@ -21,6 +22,12 @@ public class HttpTaskManager extends FileBackedTasksManager{
         super();
         gson = new GsonBuilder()
                 .setPrettyPrinting()
+                .registerTypeAdapter(Task.class, new TaskSerializers.TaskSerializer())
+                .registerTypeAdapter(Task.class, new TaskSerializers.TaskDeserializer())
+                .registerTypeAdapter(Epic.class, new TaskSerializers.EpicSerializer())
+                .registerTypeAdapter(Epic.class, new TaskSerializers.EpicDeserializer())
+                .registerTypeAdapter(SubTask.class, new TaskSerializers.SubtaskSerializer())
+                .registerTypeAdapter(SubTask.class, new TaskSerializers.SubtaskDeserializer())
                 .create();
 
         serverUrl = URI.create(url);
