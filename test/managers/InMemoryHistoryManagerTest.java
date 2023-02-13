@@ -25,7 +25,7 @@ class InMemoryHistoryManagerTest {
         task = new Task("Task 1", "test", Status.NEW);
         epic = new Epic("Epic", "test", Status.NEW);
         epic.setId(-1);
-        subTask = new SubTask("SubTask 1", "test", Status.NEW, epic);
+        subTask = new SubTask("SubTask 1", "test", Status.NEW, epic.getId());
     }
 
     @Test

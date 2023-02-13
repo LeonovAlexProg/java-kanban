@@ -105,7 +105,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     public void shouldReturnCorrectTimeFromEpicInfoFromCsvFile() {
         epic = new Epic("Epic", "test", Status.NEW);
         epic.setId(1);
-        subTask = new SubTask("SubTask 1", "test", Status.NEW, epic, Duration.ofHours(3),
+        subTask = new SubTask("SubTask 1", "test", Status.NEW, epic.getId(), Duration.ofHours(3),
                 LocalDateTime.from(task.getStartTime().plusHours(3)));
         FileBackedTasksManager newTaskManager;
         LocalDateTime expectedStartTime = subTask.getStartTime();
@@ -133,7 +133,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     public void shouldReturnCorrectTimeFromSubTaskInfoFromCsvFile() {
         epic = new Epic("Epic", "test", Status.NEW);
         epic.setId(1);
-        subTask = new SubTask("SubTask 1", "test", Status.NEW, epic, Duration.ofHours(3),
+        subTask = new SubTask("SubTask 1", "test", Status.NEW, epic.getId(), Duration.ofHours(3),
                 LocalDateTime.from(task.getStartTime().plusHours(3)));
         FileBackedTasksManager newTaskManager;
         LocalDateTime expectedStartTime = subTask.getStartTime();

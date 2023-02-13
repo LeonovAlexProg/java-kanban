@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTest {
     TaskManager manager;
-    Epic epic;
+    Epic epic = new Epic("TestEpic", "Epic for testing", Status.NEW);
     int epicId;
     List<SubTask> subTasks;
 
@@ -26,16 +26,13 @@ class EpicTest {
     public void initManager() {
         manager = Manager.getDefault();
 
-        epicId = manager.newEpic(
-                new Epic("TestEpic", "Epic for testing", Status.NEW)
-        );
+        epicId = manager.newEpic(epic);
 
-        epic = manager.getEpic(epicId);
 
         subTasks = List.of(
-                new SubTask("subtask1", "test subtask", Status.NEW, manager.getEpic(epicId)),
-                new SubTask("subtask2", "test subtask", Status.NEW, manager.getEpic(epicId)),
-                new SubTask("subtask3", "test subtask", Status.NEW, manager.getEpic(epicId))
+                new SubTask("subtask1", "test subtask", Status.NEW, epicId),
+                new SubTask("subtask2", "test subtask", Status.NEW, epicId),
+                new SubTask("subtask3", "test subtask", Status.NEW, epicId)
         );
     }
 

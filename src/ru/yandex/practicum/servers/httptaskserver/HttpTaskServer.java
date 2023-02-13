@@ -22,8 +22,6 @@ import java.util.List;
 
 public class HttpTaskServer {
     private HttpServer httpServer;
-
-    private boolean isStarted = false;
     private final TaskManager fileBackedManager;
 
     public HttpTaskServer() {
@@ -46,18 +44,16 @@ public class HttpTaskServer {
     }
 
     public void startTaskServer() {
-        if (!isStarted) {
-            httpServer.start();
-            isStarted = true;
-            System.out.println("Сервер запущен на порту " + 8080);
-        } else {
-            System.out.println("Сервер уже запущен");
-        }
+        httpServer.start();
+        System.out.println("Сервер запущен на порту " + 8080);
+    }
+
+    public void stop() {
+        httpServer.stop(0);
     }
 
     public class TasksHandler implements HttpHandler {
         Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
                 .registerTypeAdapter(Task.class, new TaskSerializers.TaskSerializer())
                 .registerTypeAdapter(Task.class, new TaskSerializers.TaskDeserializer())
                 .registerTypeAdapter(Epic.class, new TaskSerializers.EpicSerializer())

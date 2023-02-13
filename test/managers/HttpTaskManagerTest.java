@@ -1,0 +1,69 @@
+package managers;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.manager.FileBackedTasksManager;
+import ru.yandex.practicum.manager.HttpTaskManager;
+import ru.yandex.practicum.manager.Manager;
+import ru.yandex.practicum.manager.TaskManager;
+import ru.yandex.practicum.servers.kvserver.KVServer;
+import ru.yandex.practicum.tasks.Epic;
+import ru.yandex.practicum.tasks.Status;
+import ru.yandex.practicum.tasks.SubTask;
+import ru.yandex.practicum.tasks.Task;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class HttpTaskManagerTest extends FileBackedTasksManagerTest {
+    TaskManager httpTaskManager;
+    KVServer kvServer;
+    Task task;
+    Epic epic;
+    SubTask subtask;
+
+    @BeforeEach
+    public void startServer() throws IOException {
+        kvServer = new KVServer();
+        kvServer.start();
+
+        httpTaskManager = Manager.getDefault();
+
+        task = new Task("Заняться спортом", "Совершить утреннюю пробежку", Status.NEW);
+        epic = new Epic("Сходить в магазин", "Закупиться продуктами по списку", Status.NEW);
+    }
+
+    @AfterEach
+    public void stopServer() {
+        kvServer.stop();
+    }
+
+    @Test
+    void shouldLoadAndReturnTasks() {
+        int taskId;
+        int epicId;
+        int subtaskId;
+        Task expectedTask;
+        Epic expectedEpic;
+        SubTask expectedSubtask;
+
+
+        taskId = httpTaskManager.newTask(task);
+        epicId = httpTaskManager.newEpic(epic);
+        subtaskId = httpTaskManager.newSubTask(new SubTask("Подготовить список", "подготовить список того что нужно купить",
+                Status.NEW, epic.getId()));
+        HttpTaskManager newManager = HttpTaskManager.loadFromServer();
+        expectedTask = newManager.getTask(1);
+        expectedEpic = newManager.getEpic(2);
+        expectedSubtask = newManager.getSubTask(3);
+
+        Assertions.assertEquals(task, expectedTask);
+        Assertions.assertEquals(epic, expectedEpic);
+        Assertions.assertEquals(new SubTask("Подготовить список", "подготовить список того что нужно купить",
+                Status.NEW, epic.getId()), expectedSubtask);
+    }
+}

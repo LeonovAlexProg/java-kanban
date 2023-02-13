@@ -61,6 +61,17 @@ public class Task {
                 "}\n";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Task that = (Task) o;
+
+        return name.equals(that.name) && info.equals(that.info) && status.equals(that.status);
+    }
+
+
     public String toCsvString() {
         StringBuilder stringBuilder = new StringBuilder();
         if (startTime != null) {

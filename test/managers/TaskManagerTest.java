@@ -34,7 +34,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 LocalDateTime.from(actualDateTime));
         epic = new Epic("Epic", "test", Status.NEW);
         epic.setId(-1);
-        subTask = new SubTask("SubTask 1", "test", Status.NEW, epic, Duration.ofHours(3),
+        subTask = new SubTask("SubTask 1", "test", Status.NEW, epic.getId(), Duration.ofHours(3),
                 LocalDateTime.from(task.getStartTime().plusHours(3)));
     }
 
@@ -412,7 +412,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Status expectedStatus = Status.DONE;
         Status actualStatus;
         int subTaskId;
-        SubTask newSubTask = new SubTask("SubTask", "test", Status.DONE, epic);
+        SubTask newSubTask = new SubTask("SubTask", "test", Status.DONE, epic.getId());
 
         taskManager.newEpic(epic);
         subTask.setEpicId(1);
@@ -543,7 +543,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldReturnStartTimeOfFirstSubTaskForEpicWithTwoSubTasks() {
         SubTask firstSubTask = subTask;
-        SubTask secondSubTask = new SubTask("SubTask 2", "test", Status.NEW, epic, Duration.ofHours(3),
+        SubTask secondSubTask = new SubTask("SubTask 2", "test", Status.NEW, epic.getId(), Duration.ofHours(3),
                 LocalDateTime.from(task.getStartTime().plusHours(6)));
         LocalDateTime expectedStartTime = firstSubTask.getStartTime();
         LocalDateTime actualStartTime;
@@ -561,7 +561,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void shouldReturnEndTimeOfSecondSubTaskForEpicWithTwoSubTasks() {
-        SubTask secondSubTask = new SubTask("SubTask 2", "test", Status.NEW, epic, Duration.ofHours(3),
+        SubTask secondSubTask = new SubTask("SubTask 2", "test", Status.NEW, epic.getId(), Duration.ofHours(3),
                 LocalDateTime.from(task.getStartTime().plusHours(6)));
         LocalDateTime expectedEndTime = secondSubTask.getEndTime();
         LocalDateTime actualEndTime;
@@ -580,7 +580,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldReturnEndTimeOfFirstSubTaskAfterDeleteOfSecondFromEpic() {
         SubTask firstSubTask = subTask;
-        SubTask secondSubTask = new SubTask("SubTask 2", "test", Status.NEW, epic, Duration.ofHours(3),
+        SubTask secondSubTask = new SubTask("SubTask 2", "test", Status.NEW, epic.getId(), Duration.ofHours(3),
                 LocalDateTime.from(task.getStartTime().plusHours(6)));
         LocalDateTime expectedEndTime = firstSubTask.getEndTime();
         LocalDateTime actualEndTime;
@@ -599,7 +599,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void shouldReturnSumOfAllSubTasksDurationFromEpic() {
-        SubTask secondSubTask = new SubTask("SubTask 2", "test", Status.NEW, epic, Duration.ofHours(6),
+        SubTask secondSubTask = new SubTask("SubTask 2", "test", Status.NEW, epic.getId(), Duration.ofHours(6),
                 LocalDateTime.from(task.getStartTime().plusHours(6)));
         Duration expectedDuration = Duration.ofHours(9);
         Duration actualDuration;

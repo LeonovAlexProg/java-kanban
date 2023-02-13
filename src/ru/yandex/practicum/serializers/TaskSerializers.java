@@ -46,6 +46,10 @@ public class TaskSerializers {
             Task newTask = new Task(jsonObject.get("name").getAsString(), jsonObject.get("info").getAsString(),
                     Status.valueOf(jsonObject.get("status").getAsString()));
 
+            if (jsonObject.has("id")) {
+                newTask.setId(jsonObject.get("id").getAsInt());
+            }
+
             if (jsonObject.has("start time") && jsonObject.has("duration")) {
                 newTask.setStartTime(LocalDateTime.parse(jsonObject.get("start time").getAsString(),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS")));
@@ -89,6 +93,10 @@ public class TaskSerializers {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             Epic newEpic = new Epic(jsonObject.get("name").getAsString(), jsonObject.get("info").getAsString(),
                     Status.valueOf(jsonObject.get("status").getAsString()));
+
+            if (jsonObject.has("id")) {
+                newEpic.setId(jsonObject.get("id").getAsInt());
+            }
 
             if (jsonObject.has("start time") && jsonObject.has("duration")) {
                 newEpic.setStartTime(LocalDateTime.parse(jsonObject.get("start time").getAsString(),
@@ -136,6 +144,10 @@ public class TaskSerializers {
                     jsonObject.get("info").getAsString(),
                     Status.valueOf(jsonObject.get("status").getAsString()),
                     jsonObject.get("epic").getAsInt());
+
+            if (jsonObject.has("id")) {
+                newSubtask.setId(jsonObject.get("id").getAsInt());
+            }
 
             if (jsonObject.has("start time") && jsonObject.has("duration")) {
                 newSubtask.setStartTime(LocalDateTime.parse(jsonObject.get("start time").getAsString(),
