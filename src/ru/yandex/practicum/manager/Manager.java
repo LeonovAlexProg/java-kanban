@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 переход на использования getDefault полностью ломает проект, вносит кучу багов отлов которых оказался мне непосилен.
  */
 public class Manager {
-    public static TaskManager getDefault() {
+    public static HttpTaskManager getDefault() {
         return new HttpTaskManager("localhost:8081/");
     }
 
