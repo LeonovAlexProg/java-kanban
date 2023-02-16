@@ -265,7 +265,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
     }
 
     public static void main(String[] args) {
-        FileBackedTasksManager tm = Manager.getFileBacked();
+        FileBackedTasksManager tm =
+                new FileBackedTasksManager("src/ru/yandex/practicum/resources/TaskFile.csv");
 
         Task firstTask = new Task("Заняться спортом", "Совершить утреннюю пробежку", Status.NEW);
         Task secondTask = new Task("Пообедать", "Приготовить обед", Status.NEW);
@@ -300,7 +301,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
         tm.getTask(task2);
         tm.getTask(task1);
 
-        FileBackedTasksManager newTm =  Manager.getFileBacked();
+        FileBackedTasksManager newTm =
+                new FileBackedTasksManager("src/ru/yandex/practicum/resources/TaskFile.csv");
         newTm = FileBackedTasksManager.loadFromFile(newTm.csvFile.toFile());
         int epic3 = newTm.newEpic(secondEpic);
 

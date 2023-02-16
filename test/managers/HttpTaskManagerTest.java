@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class HttpTaskManagerTest extends FileBackedTasksManagerTest {
+public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
     TaskManager httpTaskManager;
     KVServer kvServer;
     Task task;
@@ -31,7 +31,7 @@ public class HttpTaskManagerTest extends FileBackedTasksManagerTest {
         kvServer = new KVServer();
         kvServer.start();
 
-        httpTaskManager = Manager.getDefault();
+        super.initManager((HttpTaskManager) Manager.getDefault());
 
         task = new Task("Заняться спортом", "Совершить утреннюю пробежку", Status.NEW);
         epic = new Epic("Сходить в магазин", "Закупиться продуктами по списку", Status.NEW);
@@ -52,9 +52,9 @@ public class HttpTaskManagerTest extends FileBackedTasksManagerTest {
         SubTask expectedSubtask;
 
 
-        taskId = httpTaskManager.newTask(task);
-        epicId = httpTaskManager.newEpic(epic);
-        subtaskId = httpTaskManager.newSubTask(new SubTask("Подготовить список", "подготовить список того что нужно купить",
+        taskId = taskManager.newTask(task);
+        epicId = taskManager.newEpic(epic);
+        subtaskId = taskManager.newSubTask(new SubTask("Подготовить список", "подготовить список того что нужно купить",
                 Status.NEW, epic.getId()));
         HttpTaskManager newManager = HttpTaskManager.loadFromServer();
         expectedTask = newManager.getTask(1);

@@ -9,6 +9,7 @@ import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.SubTask;
 import ru.yandex.practicum.tasks.Task;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
     String testCsvPath = "test/resources/TaskFile.csv";
+    File file = new File(testCsvPath);
 
     @BeforeEach
     public void initInMemoryManager() {
@@ -31,10 +33,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
 
     @AfterEach
     public void clearCsv() {
-        try (FileWriter fw = new FileWriter(Paths.get("test/resources/TaskFile.csv").toFile(),false)){
-        } catch (IOException exc) {
-            exc.getCause();
-        }
+        file.delete();
     }
 
     @Test

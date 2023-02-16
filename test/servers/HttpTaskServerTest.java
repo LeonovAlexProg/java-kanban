@@ -37,14 +37,15 @@ public class HttpTaskServerTest {
     public void startServers() {
          task.setId(1);
          epic.setId(2);
-         subTask.setId(3);
-        httpTaskServer = new HttpTaskServer();
-        httpTaskServer.startTaskServer();
         try {
             kvServer = new KVServer();
         } catch (IOException exception) {
             exception.getMessage();
         }
+        kvServer.start();
+         subTask.setId(3);
+        httpTaskServer = new HttpTaskServer();
+        httpTaskServer.startTaskServer();
         client = HttpClient.newHttpClient();
 
         gson = new GsonBuilder()
@@ -249,13 +250,13 @@ public class HttpTaskServerTest {
 
     @Test
     void getHistoryTest() throws IOException, InterruptedException {
-        int taskId = httpTaskServer.getFileBackedManager().newTask(task);
-        int epicId = httpTaskServer.getFileBackedManager().newEpic(epic);
-        int subtaskId = httpTaskServer.getFileBackedManager().newSubTask(subTask);
+        int taskId = httpTaskServer.getTaskManager().newTask(task);
+        int epicId = httpTaskServer.getTaskManager().newEpic(epic);
+        int subtaskId = httpTaskServer.getTaskManager().newSubTask(subTask);
 
-        httpTaskServer.getFileBackedManager().getTask(1);
-        httpTaskServer.getFileBackedManager().getTask(2);
-        httpTaskServer.getFileBackedManager().getTask(3);
+        httpTaskServer.getTaskManager().getTask(1);
+        httpTaskServer.getTaskManager().getTask(2);
+        httpTaskServer.getTaskManager().getTask(3);
 
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
         HttpResponse<String> response = client.send(request, handler);

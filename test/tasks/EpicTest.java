@@ -3,6 +3,8 @@ package tasks;
 import org.junit.jupiter.api.*;
 import ru.yandex.practicum.manager.Manager;
 import ru.yandex.practicum.manager.TaskManager;
+import ru.yandex.practicum.servers.client.KVTaskClient;
+import ru.yandex.practicum.servers.kvserver.KVServer;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.SubTask;
@@ -17,13 +19,16 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTest {
+    KVServer kvServer;
     TaskManager manager;
     Epic epic = new Epic("TestEpic", "Epic for testing", Status.NEW);
     int epicId;
     List<SubTask> subTasks;
 
     @BeforeEach
-    public void initManager() {
+    public void initManager() throws IOException {
+        kvServer = new KVServer();
+        kvServer.start();
         manager = Manager.getDefault();
 
         epicId = manager.newEpic(epic);
@@ -38,6 +43,7 @@ class EpicTest {
 
     @AfterEach
     public void clearCsv() {
+        kvServer.stop();
         try (FileWriter fw = new FileWriter(Paths.get("test/resources/TaskFile.csv").toFile(),false)){
         } catch (IOException exc) {
             exc.getCause();

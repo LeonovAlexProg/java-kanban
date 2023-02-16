@@ -11,18 +11,14 @@ import ru.yandex.practicum.tasks.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class HttpTaskServer {
     private HttpServer httpServer;
-    private final TaskManager fileBackedManager;
+    private final TaskManager taskManager;
 
     public HttpTaskServer() {
         try {
@@ -32,11 +28,11 @@ public class HttpTaskServer {
             System.out.println("Ошибка ввода вывода - " + exception.getMessage());
         }
 
-        fileBackedManager = Manager.getFileBacked();
+        taskManager = Manager.getDefault();
     }
 
-    public TaskManager getFileBackedManager() {
-        return fileBackedManager;
+    public TaskManager getTaskManager() {
+        return taskManager;
     }
 
     public HttpServer getHttpServer() {
@@ -87,7 +83,7 @@ public class HttpTaskServer {
         public void handleGetTask(HttpExchange exchange, String query) throws IOException {
             int taskId = Integer.parseInt(query.split("=")[1]);
 
-            Task task = fileBackedManager.getTask(taskId);
+            Task task = taskManager.getTask(taskId);
 
             if (task != null) {
                 writeResponse(exchange, gson.toJson(task), 200);
@@ -99,7 +95,7 @@ public class HttpTaskServer {
         public void handlePostTask(HttpExchange exchange) throws IOException {
             String jsonString = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
             Task task = gson.fromJson(jsonString, Task.class);
-            int taskId = fileBackedManager.newTask(task);
+            int taskId = taskManager.newTask(task);
 
             writeResponse(exchange, "Task has been added at index - " + taskId, 200);
         }
@@ -107,8 +103,8 @@ public class HttpTaskServer {
         public void handleDeleteTask(HttpExchange exchange, String query) throws IOException {
             int taskId = Integer.parseInt(query.split("=")[1]);
 
-            if (fileBackedManager.getTask(taskId) != null) {
-                fileBackedManager.deleteTaskById(taskId);
+            if (taskManager.getTask(taskId) != null) {
+                taskManager.deleteTaskById(taskId);
                 writeResponse(exchange, "Task has been deleted", 200);
             } else {
                 writeResponse(exchange, "Task not found", 404);
@@ -118,7 +114,7 @@ public class HttpTaskServer {
         public void handleGetEpic(HttpExchange exchange, String query) throws IOException {
             int epicId = Integer.parseInt(query.split("=")[1]);
 
-            Epic epic = fileBackedManager.getEpic(epicId);
+            Epic epic = taskManager.getEpic(epicId);
 
             if (epic != null) {
                 writeResponse(exchange, gson.toJson(epic), 200);
@@ -130,7 +126,7 @@ public class HttpTaskServer {
         public void handlePostEpic(HttpExchange exchange) throws IOException {
             String jsonString = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
             Epic epic = gson.fromJson(jsonString, Epic.class);
-            int epicId = fileBackedManager.newEpic(epic);
+            int epicId = taskManager.newEpic(epic);
 
             writeResponse(exchange, "Task has been added at index - " + epicId, 200);
         }
@@ -138,8 +134,8 @@ public class HttpTaskServer {
         public void handleDeleteEpic(HttpExchange exchange, String query) throws IOException {
             int epicId = Integer.parseInt(query.split("=")[1]);
 
-            if (fileBackedManager.getEpic(epicId) != null) {
-                fileBackedManager.deleteEpicById(epicId);
+            if (taskManager.getEpic(epicId) != null) {
+                taskManager.deleteEpicById(epicId);
                 writeResponse(exchange, "Task has been deleted", 200);
             } else {
                 writeResponse(exchange, "Task not found", 404);
@@ -149,7 +145,7 @@ public class HttpTaskServer {
         public void handleGetSubtask(HttpExchange exchange, String query) throws IOException {
             int subtaskId = Integer.parseInt(query.split("=")[1]);
 
-            SubTask subtask = fileBackedManager.getSubTask(subtaskId);
+            SubTask subtask = taskManager.getSubTask(subtaskId);
 
             if (subtask != null) {
                 writeResponse(exchange, gson.toJson(subtask), 200);
@@ -161,7 +157,7 @@ public class HttpTaskServer {
         public void handlePostSubtask(HttpExchange exchange) throws IOException {
             String jsonString = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
             SubTask subtask = gson.fromJson(jsonString, SubTask.class);
-            int subtaskId = fileBackedManager.newSubTask(subtask);
+            int subtaskId = taskManager.newSubTask(subtask);
 
             writeResponse(exchange, "Task has been added at index - " + subtaskId, 200);
         }
@@ -169,8 +165,8 @@ public class HttpTaskServer {
         public void handleDeleteSubtask(HttpExchange exchange, String query) throws IOException {
             int subtaskId = Integer.parseInt(query.split("=")[1]);
 
-            if (fileBackedManager.getSubTask(subtaskId) != null) {
-                fileBackedManager.deleteSubTaskById(subtaskId);
+            if (taskManager.getSubTask(subtaskId) != null) {
+                taskManager.deleteSubTaskById(subtaskId);
                 writeResponse(exchange, "Task has been deleted", 200);
             } else {
                 writeResponse(exchange, "Task not found", 404);
@@ -178,7 +174,7 @@ public class HttpTaskServer {
         }
 
         public void handleGetAllTasks(HttpExchange exchange) throws IOException {
-            List<Task> allTasks = fileBackedManager.getAllTasks();
+            List<Task> allTasks = taskManager.getAllTasks();
             String jsonString = gson.toJson(allTasks);
 
             if (jsonString.isEmpty()) {
@@ -189,7 +185,7 @@ public class HttpTaskServer {
         }
 
         public void handleGetHistory(HttpExchange exchange) throws IOException {
-            List<Task> history = fileBackedManager.getHistory();
+            List<Task> history = taskManager.getHistory();
             String jsonHistory = gson.toJson(history);
 
             if (jsonHistory.isEmpty()) {
