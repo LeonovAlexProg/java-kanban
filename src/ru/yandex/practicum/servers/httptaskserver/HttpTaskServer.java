@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import ru.yandex.practicum.manager.FileBackedTasksManager;
 import ru.yandex.practicum.manager.Manager;
 import ru.yandex.practicum.manager.TaskManager;
 import ru.yandex.practicum.serializers.TaskSerializers;
@@ -32,7 +33,8 @@ public class HttpTaskServer {
             System.out.println("Ошибка ввода вывода - " + exception.getMessage());
         }
 
-        fileBackedManager = Manager.getFileBacked();
+        fileBackedManager =
+                new FileBackedTasksManager("src/ru/yandex/practicum/resources/TaskFile.csv");
     }
 
     public TaskManager getFileBackedManager() {

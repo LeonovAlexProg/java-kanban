@@ -8,15 +8,11 @@ import java.nio.file.Paths;
 переход на использования getDefault полностью ломает проект, вносит кучу багов отлов которых оказался мне непосилен.
  */
 public class Manager {
-    public static TaskManager getDefault() {
+    public static HttpTaskManager getDefault() {
         return new HttpTaskManager("localhost:8081/");
     }
 
     public static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
-    }
-
-    public static FileBackedTasksManager getFileBacked() {
-        return new FileBackedTasksManager("src/ru/yandex/practicum/resources/TaskFile.csv");
     }
 }

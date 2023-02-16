@@ -11,15 +11,8 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
-        KVServer server;
-        try {
-            server = new KVServer();
-            server.start();
-        } catch (IOException exception) {
-            System.out.printf(exception.getMessage());
-        }
-
-        HttpTaskManager httpTaskManager = (HttpTaskManager) Manager.getDefault();
+        TaskManager httpTaskManager =
+                new FileBackedTasksManager("src/ru/yandex/practicum/resources/TaskFile.csv");
 
         Task firstTask = new Task("Заняться спортом", "Совершить утреннюю пробежку", Status.NEW);
         Task secondTask = new Task("Пообедать", "Приготовить обед", Status.NEW);
