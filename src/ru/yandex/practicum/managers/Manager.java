@@ -1,6 +1,4 @@
-package ru.yandex.practicum.manager;
-
-import java.nio.file.Paths;
+package ru.yandex.practicum.managers;
 
 
 /*

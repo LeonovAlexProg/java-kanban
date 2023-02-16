@@ -1,9 +1,8 @@
-package tasks;
+package ru.yandex.practicum.tasks;
 
 import org.junit.jupiter.api.*;
-import ru.yandex.practicum.manager.Manager;
-import ru.yandex.practicum.manager.TaskManager;
-import ru.yandex.practicum.servers.client.KVTaskClient;
+import ru.yandex.practicum.managers.Manager;
+import ru.yandex.practicum.managers.TaskManager;
 import ru.yandex.practicum.servers.kvserver.KVServer;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Status;
@@ -13,7 +12,6 @@ import ru.yandex.practicum.tasks.TaskTypes;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

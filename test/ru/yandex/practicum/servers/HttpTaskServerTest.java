@@ -1,4 +1,4 @@
-package servers;
+package ru.yandex.practicum.servers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -95,10 +95,7 @@ public class HttpTaskServerTest {
         HttpRequest getRequest;
         HttpRequest deleteRequest;
         HttpResponse<String> response;
-        Task expectedTask;
-        Task actualTask;
 
-        expectedTask = task;
         URI getAndDeleteUri = URI.create(url + "task?id=1");
         URI postUri = URI.create(url + "task");
         bodyPublisher = HttpRequest.BodyPublishers.ofString(gson.toJson(task), StandardCharsets.UTF_8);
@@ -108,9 +105,9 @@ public class HttpTaskServerTest {
         client.send(postRequest, handler);
         client.send(deleteRequest, handler);
         response = client.send(getRequest, handler);
-        actualTask = gson.fromJson(response.body().toString(), Task.class);
 
-        Assertions.assertEquals("Task not found", actualTask);
+
+        Assertions.assertEquals("Task not found", response.body());
     }
 
     @Test
@@ -142,10 +139,7 @@ public class HttpTaskServerTest {
         HttpRequest getRequest;
         HttpRequest deleteRequest;
         HttpResponse<String> response;
-        Epic expectedEpic;
-        Task actualEpic;
 
-        expectedEpic = epic;
         URI getAndDeleteUri = URI.create(url + "epic?id=1");
         URI postUri = URI.create(url + "epic");
         bodyPublisher = HttpRequest.BodyPublishers.ofString(gson.toJson(epic), StandardCharsets.UTF_8);
@@ -155,9 +149,8 @@ public class HttpTaskServerTest {
         client.send(postRequest, handler);
         client.send(deleteRequest, handler);
         response = client.send(getRequest, handler);
-        actualEpic = gson.fromJson(response.body().toString(), Task.class);
 
-        Assertions.assertEquals("Task not found", actualEpic);
+        Assertions.assertEquals("Task not found", response.body());
     }
 
     @Test
@@ -194,6 +187,7 @@ public class HttpTaskServerTest {
         HttpRequest.BodyPublisher bodyPublisher;
         HttpRequest postEpicRequest;
         HttpRequest postRequest;
+        HttpRequest deleteRequest;
         HttpRequest getRequest;
         HttpResponse<String> response;
         SubTask expectedSubtask;
@@ -201,7 +195,7 @@ public class HttpTaskServerTest {
 
         expectedSubtask = subTask;
         expectedSubtask.setEpicId(1);
-        URI getUri = URI.create(url + "subtask?id=2");
+        URI getAndDeleteUri = URI.create(url + "subtask?id=2");
         URI postEpicUri = URI.create(url + "epic");
         URI postUri = URI.create(url + "subtask");
         bodyPublisher = HttpRequest.BodyPublishers.ofString(gson.toJson(subTask), StandardCharsets.UTF_8);
@@ -209,13 +203,14 @@ public class HttpTaskServerTest {
                 HttpRequest.BodyPublishers.ofString(gson.toJson(epic), StandardCharsets.UTF_8)
         ).uri(postEpicUri).build();
         postRequest = HttpRequest.newBuilder().POST(bodyPublisher).uri(postUri).build();
-        getRequest = HttpRequest.newBuilder().GET().uri(getUri).build();
+        getRequest = HttpRequest.newBuilder().GET().uri(getAndDeleteUri).build();
+        deleteRequest = HttpRequest.newBuilder().DELETE().uri(getAndDeleteUri).build();
         client.send(postEpicRequest, handler);
         client.send(postRequest, handler);
+        client.send(deleteRequest, handler);
         response = client.send(getRequest, handler);
-        actualSubtask = gson.fromJson(response.body(), SubTask.class);
 
-        Assertions.assertEquals("Task not found", actualSubtask);
+        Assertions.assertEquals("Task not found", response.body());
     }
 
     @Test

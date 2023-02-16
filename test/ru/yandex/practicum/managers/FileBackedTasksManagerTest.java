@@ -1,19 +1,15 @@
-package managers;
+package ru.yandex.practicum.managers;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.manager.FileBackedTasksManager;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.SubTask;
 import ru.yandex.practicum.tasks.Task;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,13 +18,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
-    String testCsvPath = "test/resources/TaskFile.csv";
-    File file = new File(testCsvPath);
+    String testCsvPath =
+            "C:\\Users\\Alex\\dev\\java-kanban\\test\\ru\\yandex\\practicum\\managers\\resources\\TaskFile.csv";
+    File file;
 
     @BeforeEach
     public void initInMemoryManager() {
         super.initManager(new FileBackedTasksManager(testCsvPath));
         taskManager.deleteAllTasks();
+        file = new File(testCsvPath);
     }
 
     @AfterEach
@@ -117,7 +115,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         int epicId = taskManager.newEpic(epic);
         int subTaskId = taskManager.newSubTask(subTask);
         newTaskManager = FileBackedTasksManager.loadFromFile(
-                Path.of("test/resources/TaskFile.csv").toFile()
+                Path.of("C:\\Users\\Alex\\dev\\java-kanban\\test\\ru\\yandex\\practicum\\managers\\resources\\TaskFile.csv").toFile()
         );
         actualStartTime = newTaskManager.getEpic(epicId).getStartTime();
         actualEndTime = newTaskManager.getEpic(epicId).getEndTime();
@@ -145,7 +143,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         taskManager.newEpic(epic);
         taskManager.newSubTask(subTask);
         newTaskManager = FileBackedTasksManager.loadFromFile(
-                Path.of("test/resources/TaskFile.csv").toFile()
+                Path.of("C:\\Users\\Alex\\dev\\java-kanban\\test\\ru\\yandex\\practicum\\managers\\resources\\TaskFile.csv").toFile()
         );
         actualStartTime = newTaskManager.getSubTask(2).getStartTime();
         actualEndTime = newTaskManager.getSubTask(2).getEndTime();

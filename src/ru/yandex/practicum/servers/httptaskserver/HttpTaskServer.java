@@ -4,8 +4,8 @@ import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import ru.yandex.practicum.manager.Manager;
-import ru.yandex.practicum.manager.TaskManager;
+import ru.yandex.practicum.managers.Manager;
+import ru.yandex.practicum.managers.TaskManager;
 import ru.yandex.practicum.serializers.TaskSerializers;
 import ru.yandex.practicum.tasks.*;
 
@@ -45,7 +45,7 @@ public class HttpTaskServer {
     }
 
     public void stop() {
-        httpServer.stop(0);
+        httpServer.stop(1);
     }
 
     public class TasksHandler implements HttpHandler {
@@ -257,7 +257,7 @@ public class HttpTaskServer {
             if(responseString.isBlank()) {
                 exchange.sendResponseHeaders(responseCode, 0);
             } else {
-                byte[] bytes = responseString.getBytes(StandardCharsets.UTF_16);
+                byte[] bytes = responseString.getBytes(StandardCharsets.UTF_8);
                 exchange.sendResponseHeaders(responseCode, bytes.length);
                 try (OutputStream os = exchange.getResponseBody()) {
                     os.write(bytes);

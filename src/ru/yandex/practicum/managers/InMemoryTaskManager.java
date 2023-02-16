@@ -1,4 +1,4 @@
-package ru.yandex.practicum.manager;
+package ru.yandex.practicum.managers;
 
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Status;

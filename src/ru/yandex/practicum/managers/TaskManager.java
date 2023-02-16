@@ -1,4 +1,4 @@
-package ru.yandex.practicum.manager;
+package ru.yandex.practicum.managers;
 
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.SubTask;
@@ -6,8 +6,6 @@ import ru.yandex.practicum.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 public interface TaskManager {
 

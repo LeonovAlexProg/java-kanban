@@ -1,11 +1,10 @@
-package ru.yandex.practicum.manager;
+package ru.yandex.practicum.managers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import ru.yandex.practicum.serializers.TaskSerializers;
 import ru.yandex.practicum.servers.client.KVTaskClient;
-import ru.yandex.practicum.servers.httptaskserver.HttpTaskServer;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.SubTask;
 import ru.yandex.practicum.tasks.Task;

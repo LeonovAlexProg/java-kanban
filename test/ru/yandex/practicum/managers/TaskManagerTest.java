@@ -1,21 +1,18 @@
-package managers;
+package ru.yandex.practicum.managers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import ru.yandex.practicum.manager.TaskManager;
+import ru.yandex.practicum.managers.TaskManager;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.SubTask;
 import ru.yandex.practicum.tasks.Task;
 
-import java.nio.file.Path;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 abstract class TaskManagerTest<T extends TaskManager> {
     LocalDateTime actualDateTime = LocalDateTime.now();

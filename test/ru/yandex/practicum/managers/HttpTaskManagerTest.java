@@ -1,13 +1,9 @@
-package managers;
+package ru.yandex.practicum.managers;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.manager.FileBackedTasksManager;
-import ru.yandex.practicum.manager.HttpTaskManager;
-import ru.yandex.practicum.manager.Manager;
-import ru.yandex.practicum.manager.TaskManager;
 import ru.yandex.practicum.servers.kvserver.KVServer;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Status;
@@ -15,9 +11,6 @@ import ru.yandex.practicum.tasks.SubTask;
 import ru.yandex.practicum.tasks.Task;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
     TaskManager httpTaskManager;

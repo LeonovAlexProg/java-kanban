@@ -1,6 +1,0 @@
-id,type,name,status,description,epic,start time, duration, end time
-1,TASK,Заняться спортом,NEW,Совершить утреннюю пробежку,
-2,TASK,Пообедать,NEW,Приготовить обед,
-7,EPIC,Учиться,NEW,Выполнить задания по учёбе,
-
-2,1,7

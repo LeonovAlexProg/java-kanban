@@ -1,10 +1,7 @@
 package ru.yandex.practicum.servers.kvserver;
 
-import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.manager.HttpTaskManager;
-import ru.yandex.practicum.manager.Manager;
-import ru.yandex.practicum.manager.TaskManager;
-import ru.yandex.practicum.servers.client.KVTaskClient;
+import ru.yandex.practicum.managers.HttpTaskManager;
+import ru.yandex.practicum.managers.Manager;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.SubTask;
